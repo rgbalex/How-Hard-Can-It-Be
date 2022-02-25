@@ -16,6 +16,7 @@ buildscript {
 
 allprojects {
     apply plugin: "eclipse"
+    apply plugin: "maven-publish"
 
     version = '1.0'
     ext {
@@ -64,3 +65,5 @@ project(":core") {
 
     }
 }
+
+

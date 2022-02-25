@@ -34,6 +34,20 @@ task dist(type: Jar) {
     with jar
 }
 
+task publishing {
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/rgbalex/How-Hard-Can-It-Be"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("SAMPLE_TOKEN")
+            }
+        }
+    }
+}
+
 
 dist.dependsOn classes
 
