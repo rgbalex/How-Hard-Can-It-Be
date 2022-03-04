@@ -96,10 +96,8 @@ subprojects {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/rgbalex/How-Hard-Can-It-Be")
                 credentials {
-//                    username = System.getenv("github.actor")
-                    username = "rgbalex"
-//                    password = System.getenv("secrets.sampletoken")
-                    password = "aZcFTxlZEYZhOukH"
+                    username = System.getenv("github.actor")
+                    password = System.getenv("secrets.sampletoken")
                 }
             }
         }
