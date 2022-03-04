@@ -1,5 +1,7 @@
 # How-Hard-Can-It-Be
 
+[![pre-release](https://github.com/rgbalex/How-Hard-Can-It-Be/actions/workflows/gradle-publish.yml/badge.svg?branch=main)](https://github.com/rgbalex/How-Hard-Can-It-Be/actions/workflows/gradle-publish.yml)
+
 ![Screenshot of game](game.png)
 
 You control a ship sailing the Lake of York and are tasked with fulfilling certain quests along the way.
