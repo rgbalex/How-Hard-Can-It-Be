@@ -41,5 +41,4 @@ jobs:
       with:
         arguments: desktop:publish
       env:
-        USERNAME: ${{ secrets.username }}
-        TOKEN: ${{ secrets.sampletoken }}
+        TOKEN: ${{ secrets.SAMPLETOKEN }}
