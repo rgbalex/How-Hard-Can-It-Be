@@ -75,5 +75,5 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
-          path: |
-            desktop/build/libs
+          files: |
+            desktop/build/libs/*.jar
