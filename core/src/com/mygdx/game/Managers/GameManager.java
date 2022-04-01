@@ -63,6 +63,7 @@ public final class GameManager {
      * called every fram checks id the quests are completed
      */
     public static void update() {
+
         QuestManager.checkCompleted();
     }
 

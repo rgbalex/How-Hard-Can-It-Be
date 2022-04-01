@@ -54,7 +54,16 @@ public final class RenderingManager {
      * @param layer the layer that it will be rendered in
      */
     public static void addItem(Component item, RenderLayer layer) {
-        tryInit();
+        //tryInit();
+        if (renderItems == null){
+            renderItems = new ArrayList<>();
+        }
+        if (layers == null){
+            layers = new ArrayList<>(RenderLayer.values().length);
+            for (int i = 0; i < RenderLayer.values().length; i++) {
+                layers.add(new ArrayList<>());
+            }
+        }
         renderItems.add(item);
         layers.get(layer.ordinal()).add(renderItems.size() - 1);
     }

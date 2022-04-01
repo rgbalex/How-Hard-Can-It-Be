@@ -1,10 +1,10 @@
-com/mygdx/tests/GdxTestRunner.java
- com.mygdx.tests.GdxTestRunner
-com/mygdx/tests/CombatTests.java
- com.mygdx.tests.CombatTests
 com/mygdx/tests/EnemyTests.java
  com.mygdx.tests.EnemyTests
+com/mygdx/tests/GdxTestRunner.java
+ com.mygdx.tests.GdxTestRunner
 com/mygdx/tests/AssetTests.java
  com.mygdx.tests.AssetTests
 com/mygdx/tests/MovementTests.java
  com.mygdx.tests.MovementTests
+com/mygdx/tests/CombatTests.java
+ com.mygdx.tests.CombatTests
