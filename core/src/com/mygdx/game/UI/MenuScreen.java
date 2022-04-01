@@ -2,10 +2,12 @@ package com.mygdx.game.UI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.Managers.ResourceManager;
 import com.mygdx.game.PirateGame;
@@ -44,6 +46,22 @@ public class MenuScreen extends Page {
             }
         });
         t.add(play).top().size(100, 25).spaceBottom(space);
+        t.row();
+
+        TextButton difficulty = new TextButton("nOOB", parent.skin);
+        difficulty.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println(difficulty.getText());
+                if (difficulty.getText().toString().equals("nOOB")) {
+                    difficulty.setText("pRO");
+                }
+                else {
+                    difficulty.setText("nOOB");
+                }
+            }
+        });
+        t.add(difficulty).top().size(100, 25).spaceBottom(space);
         t.row();
 
         TextButton quit = new TextButton("Quit", parent.skin);
