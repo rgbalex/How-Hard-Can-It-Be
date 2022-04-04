@@ -52,7 +52,7 @@ public class MenuScreen extends Page {
         difficulty.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println(difficulty.getText());
+//                System.out.println(difficulty.getText());
                 if (difficulty.getText().toString().equals("nOOB")) {
                     difficulty.setText("pRO");
                 }

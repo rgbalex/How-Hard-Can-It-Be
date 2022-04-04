@@ -24,9 +24,12 @@ public class GameScreen extends Page {
     private Label healthLabel;
     private Label dosh;
     private Label ammo;
+    private Label points;
     private final Label questDesc;
     private final Label questName;
     private Image powUpTimer;
+    private int timer_points;
+    private int frame_timer;
     /*private final Label questComplete;
     private float showTimer = 0;
     // in seconds
@@ -198,16 +201,21 @@ public class GameScreen extends Page {
     protected void update() {
         super.update();
         Player p = GameManager.getPlayer();
+        frame_timer += 1;
+        if (frame_timer > 60) {
+            frame_timer = 0;
+            timer_points += 1;
+        }
         healthLabel.setText(String.valueOf(p.getHealth()));
         dosh.setText(String.valueOf(p.getPlunder()));
         ammo.setText(String.valueOf(p.getAmmo()));
         if (p.isPoweredUp()){
             powUpTimer.setDrawable(parent.skin.getDrawable("ball"));
         }
+        points.setText("Points: " + String.valueOf(p.getPlunder()*10+timer_points));
         if (!QuestManager.anyQuests()) {
             parent.end.win();
             parent.setScreen(parent.end);
-
         } else {
             Quest q = QuestManager.currentQuest();
             /*if(Objects.equals(prevQuest, "")) {
@@ -253,8 +261,16 @@ public class GameScreen extends Page {
         table.add(new Image(parent.skin.getDrawable("ball"))).top().left().size(1.25f * TILE_SIZE);
         ammo = new Label("N/A", parent.skin);
         table.add(ammo).top().left().size(50);
+
+        table.row();
+        points = new Label("N/A", parent.skin);
+        table.add(points).top().left().size(50);
+
         table.row();
         table.add(powUpTimer).top().left().size(1.25f * TILE_SIZE);
         table.top().left();
+
+
+
     }
 }
