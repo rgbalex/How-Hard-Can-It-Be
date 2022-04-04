@@ -5,19 +5,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Components.ComponentEvent;
-import com.mygdx.game.Components.RigidBody;
 import com.mygdx.game.Components.PlayerController;
 import com.mygdx.game.Entitys.Player;
-import com.mygdx.game.Entitys.Powerup;
 import com.mygdx.game.Managers.*;
 import com.mygdx.game.PirateGame;
 import com.mygdx.game.Quests.Quest;
@@ -39,6 +37,14 @@ public class GameScreen extends Page {
     private Image powUpTimer;
     private int timer_points;
     private int frame_timer;
+    private int alpha_timer;
+
+    private final SpriteBatch effectBatch = new SpriteBatch();
+    private final Texture darken = new Texture(Gdx.files.internal("darken.png"));
+    private final Sprite bad_weather_sprite_dark = new Sprite(darken, 2000,2000);
+
+    private final Sprite[] rainfall_list = new Sprite[9];
+
     /*private final Label questComplete;
     private float showTimer = 0;
     // in seconds
@@ -139,6 +145,62 @@ public class GameScreen extends Page {
         t2.setFillParent(true);
         actors.add(t2);
 
+
+//        Effect setup
+        Texture rainfall = new Texture(Gdx.files.internal("rainfall.png"));
+        Sprite rainfall_sprite = new Sprite(rainfall, 640, 640);
+        rainfall_sprite.setX(0);
+        rainfall_sprite.setY(0);
+        rainfall_sprite.setAlpha(0f);
+        rainfall_list[0] = rainfall_sprite;
+
+        Sprite rainfall_sprite1 = new Sprite(rainfall, 640, 640);
+        rainfall_sprite1.setX(640);
+        rainfall_sprite1.setY(0);
+        rainfall_sprite1.setAlpha(0f);
+        rainfall_list[1] = rainfall_sprite1;
+
+        Sprite rainfall_sprite2 = new Sprite(rainfall, 640, 640);
+        rainfall_sprite2.setX(0);
+        rainfall_sprite2.setY(640);
+        rainfall_sprite2.setAlpha(0f);
+        rainfall_list[2] = rainfall_sprite2;
+
+        Sprite rainfall_sprite3 = new Sprite(rainfall, 640, 640);
+        rainfall_sprite3.setX(640);
+        rainfall_sprite3.setY(640);
+        rainfall_sprite3.setAlpha(0f);
+        rainfall_list[3] = rainfall_sprite3;
+
+        Sprite rainfall_sprite4 = new Sprite(rainfall, 640, 640);
+        rainfall_sprite4.setX(640+640);
+        rainfall_sprite4.setY(0);
+        rainfall_sprite4.setAlpha(0f);
+        rainfall_list[4] = rainfall_sprite4;
+
+        Sprite rainfall_sprite5 = new Sprite(rainfall, 640, 640);
+        rainfall_sprite5.setX(640+640);
+        rainfall_sprite5.setY(640);
+        rainfall_sprite5.setAlpha(0f);
+        rainfall_list[5] = rainfall_sprite5;
+
+        Sprite rainfall_sprite6 = new Sprite(rainfall, 640, 640);
+        rainfall_sprite6.setX(640+640);
+        rainfall_sprite6.setY(640+640);
+        rainfall_sprite6.setAlpha(0f);
+        rainfall_list[6] = rainfall_sprite6;
+
+        Sprite rainfall_sprite7 = new Sprite(rainfall, 640, 640);
+        rainfall_sprite7.setX(640);
+        rainfall_sprite7.setY(640+640);
+        rainfall_sprite7.setAlpha(0f);
+        rainfall_list[7] = rainfall_sprite7;
+
+        Sprite rainfall_sprite8 = new Sprite(rainfall, 640, 640);
+        rainfall_sprite8.setX(0);
+        rainfall_sprite8.setY(640+640);
+        rainfall_sprite8.setAlpha(0f);
+        rainfall_list[8] = rainfall_sprite8;
     }
 
     private float accumulator;
@@ -214,6 +276,36 @@ public class GameScreen extends Page {
             frame_timer = 0;
             timer_points += 1;
         }
+
+//        Effects are drawn first so they are underneath the UI
+//        Fade In
+        if (timer_points >= 10 && timer_points < 25) {
+            bad_weather_sprite_dark.setAlpha(alpha_timer / 255f);
+            for (Sprite sprite : rainfall_list) {sprite.setAlpha(alpha_timer / 255f);}
+            if (alpha_timer < 254) {alpha_timer++;}
+        }
+
+//        Fade Out
+        if (timer_points >= 30 && timer_points < 35) {
+            bad_weather_sprite_dark.setAlpha(alpha_timer / 255f);
+            for (Sprite sprite : rainfall_list) {sprite.setAlpha(alpha_timer / 255f);}
+            if (alpha_timer > 1) {alpha_timer --;}
+        }
+
+//        Rain Animation
+        if (timer_points >= 10 && timer_points < 40) {
+            effectBatch.begin();
+            bad_weather_sprite_dark.draw(effectBatch);
+            for (Sprite sprite : rainfall_list) {
+                sprite.setX(sprite.getX() - 2);
+                sprite.setY(sprite.getY() - 6);
+                sprite.draw(effectBatch);
+                if (sprite.getY() < -640) {sprite.setY(1080);}
+                if (sprite.getX() < -640) {sprite.setX(1920 - (1.5f * 640));}
+            }
+            effectBatch.end();
+        }
+
         healthLabel.setText(String.valueOf(p.getHealth()));
         dosh.setText(String.valueOf(p.getPlunder()));
         ammo.setText(String.valueOf(p.getAmmo()));
@@ -229,7 +321,7 @@ public class GameScreen extends Page {
             current_powup.setVisible(false);
             bar_green.setVisible(false);
         }
-        points.setText("Points: " + String.valueOf(p.getPlunder()*10+timer_points));
+        points.setText("Points: " + (p.getPlunder()*10+timer_points));
         if (!QuestManager.anyQuests()) {
             parent.end.win();
             parent.setScreen(parent.end);
@@ -261,13 +353,14 @@ public class GameScreen extends Page {
     protected void CreateActors() {
         Table table = new Table();
         table.setFillParent(true);
+        table.setDebug(false);
         actors.add(table);
+
         table.add(new Image(parent.skin.getDrawable("heart"))).top().left().size(1.25f * TILE_SIZE);
         healthLabel = new Label("N/A", parent.skin);
         table.add(healthLabel).top().left().size(50);
 
         table.row();
-        table.setDebug(false);
 
         table.add(new Image(parent.skin.getDrawable("coin"))).top().left().size(1.25f * TILE_SIZE);
         dosh = new Label("N/A", parent.skin);
