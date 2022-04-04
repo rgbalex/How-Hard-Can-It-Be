@@ -2,6 +2,7 @@
   "starting": {
     "health": 100,
     "damage": 10.0,
+    "points": 0,
     "plunder": 0,
     "playerSpeed": 100.0,
     "cannonSpeed": 10000.0,
