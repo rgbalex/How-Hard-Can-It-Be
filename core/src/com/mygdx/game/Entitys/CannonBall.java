@@ -102,6 +102,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
         return shooter;
     }
 
+    public boolean isActive(){return toggleLife;}
     @Override
     public void BeginContact(CollisionInfo info) {
 

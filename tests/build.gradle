@@ -3,7 +3,14 @@
 apply plugin: "java"
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    implementation 'junit:junit:4.+'
+    implementation "org.mockito:mockito-all:1.9.+"
+    implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation 'junit:junit:4.13.1'
+}
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["../core/assets"]

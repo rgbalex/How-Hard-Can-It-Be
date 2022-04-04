@@ -293,6 +293,16 @@ public final class ResourceManager {
         }
     }
 
+    public static void deepClean(){
+        cleanUp();
+        initialized = false;
+        loaded = false;
+        ids = new ArrayList<>();
+        tileMaps = new ArrayList<>();
+        fontGenerators = new HashMap<>();
+        fonts = new HashMap<>();
+    }
+
     /**
      * Will check if new assets can be added if not throw an error
      */

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.mygdx.tests.CombatTests" tests="1" skipped="0" failures="1" errors="0" timestamp="2022-04-01T11:22:13" hostname="SURFACEBOOK" time="0.158">
+  <properties/>
+  <testcase name="testCannonBallMoves" classname="com.mygdx.tests.CombatTests" time="0.158">
+    <failure message="java.lang.ExceptionInInitializerError" type="java.lang.ExceptionInInitializerError">java.lang.ExceptionInInitializerError
+	at com.mygdx.game.Managers.PhysicsManager.Initialize(PhysicsManager.java:42)
+	at com.mygdx.tests.CombatTests.prepareEnv(CombatTests.java:36)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at com.mygdx.tests.GdxTestRunner.render(GdxTestRunner.java:60)
+	at com.badlogic.gdx.backends.headless.HeadlessApplication.mainLoop(HeadlessApplication.java:128)
+	at com.badlogic.gdx.backends.headless.HeadlessApplication$1.run(HeadlessApplication.java:93)
+Caused by: com.badlogic.gdx.utils.SharedLibraryLoadRuntimeException: Couldn't load shared library 'gdx-box2d64.dll' for target: Windows 10, 64-bit
+	at com.badlogic.gdx.utils.SharedLibraryLoader.load(SharedLibraryLoader.java:128)
+	at com.badlogic.gdx.physics.box2d.World.&lt;clinit&gt;(World.java:188)
+	... 19 more
+Caused by: com.badlogic.gdx.utils.SharedLibraryLoadRuntimeException: Unable to read file for extraction: gdx-box2d64.dll
+	at com.badlogic.gdx.utils.SharedLibraryLoader.readFile(SharedLibraryLoader.java:137)
+	at com.badlogic.gdx.utils.SharedLibraryLoader.loadFile(SharedLibraryLoader.java:293)
+	at com.badlogic.gdx.utils.SharedLibraryLoader.load(SharedLibraryLoader.java:124)
+	... 20 more
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
