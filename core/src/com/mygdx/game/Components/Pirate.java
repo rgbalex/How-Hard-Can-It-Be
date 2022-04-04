@@ -11,6 +11,7 @@ import com.mygdx.utils.QueueFIFO;
  * Gives the concepts of health plunder, etc. Allows for firing of cannonballs, factions, death, targets
  */
 public class Pirate extends Component {
+    private int points;
     private int factionId;
     private int plunder;
     protected boolean isAlive;
@@ -28,6 +29,7 @@ public class Pirate extends Component {
         targets = new QueueFIFO<>();
         type = ComponentType.Pirate;
         plunder = GameManager.getSettings().get("starting").getInt("plunder");
+        points = GameManager.getSettings().get("starting").getInt("points");
         factionId = 1;
         isAlive = true;
         JsonValue starting = GameManager.getSettings().get("starting");
@@ -47,6 +49,10 @@ public class Pirate extends Component {
     public void addPlunder(int money) {
         plunder += money;
     }
+
+    public int getPoints() { return points; }
+
+    public void addPoints(int smlPoint) { points += smlPoint;}
 
     public Faction getFaction() {
         return GameManager.getFaction(factionId);
