@@ -150,7 +150,7 @@ public class NPCShip extends Ship implements CollisionCallBack {
     }
 
     /**
-     * if a taget has left remove it from the potential targets Queue
+     * if a target has left remove it from the potential targets Queue
      *
      * @param info collision info
      */

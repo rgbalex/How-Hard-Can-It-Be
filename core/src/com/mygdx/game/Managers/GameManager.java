@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.mygdx.game.AI.TileMapGraph;
+import com.mygdx.game.Components.Pirate;
 import com.mygdx.game.Components.Transform;
 import com.mygdx.game.Entitys.*;
 import com.mygdx.game.Faction;
@@ -25,7 +26,7 @@ public final class GameManager {
     private static final int cacheSize = 20;
     private static ArrayList<CannonBall> ballCache;
     private static int currentElement;
-
+    private static Powerup [] powerups;  // TODO remove after testing
     private static JsonValue settings;
 
     private static TileMapGraph mapGraph;
@@ -43,7 +44,7 @@ public final class GameManager {
         ships = new ArrayList<>();
         ballCache = new ArrayList<>(cacheSize);
         colleges = new ArrayList<>();
-
+        powerups = new Powerup[] {new Powerup(0), new Powerup(1),new Powerup(2),new Powerup(3),new Powerup(4)}; // TODO remove after testing
         for (int i = 0; i < cacheSize; i++) {
             ballCache.add(new CannonBall());
         }
@@ -105,7 +106,11 @@ public final class GameManager {
         tryInit();
         Player p = new Player();
         p.setFaction(1);
+        p.getComponent(Pirate.class).takeDamage(10f);
         ships.add(p);
+        for (int i = 0; i < 5; i++){
+            powerups[i].place(p.getPosition().x + (35 * i), p.getPosition().y + 35);
+        }
     }
 
     /**

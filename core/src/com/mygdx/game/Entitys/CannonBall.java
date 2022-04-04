@@ -35,7 +35,6 @@ public class CannonBall extends Entity implements CollisionCallBack {
         rb.setCallback(this);
 
         addComponents(t, r, rb);
-
         speed = GameManager.getSettings().get("starting").getFloat("cannonSpeed");
         r.hide();
     }

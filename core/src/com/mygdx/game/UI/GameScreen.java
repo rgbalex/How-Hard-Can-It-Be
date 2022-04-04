@@ -3,13 +3,16 @@ package com.mygdx.game.UI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Components.ComponentEvent;
 import com.mygdx.game.Components.RigidBody;
+import com.mygdx.game.Components.PlayerController;
 import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Managers.*;
 import com.mygdx.game.PirateGame;
@@ -23,6 +26,7 @@ public class GameScreen extends Page {
     private Label ammo;
     private final Label questDesc;
     private final Label questName;
+    private Image powUpTimer;
     /*private final Label questComplete;
     private float showTimer = 0;
     // in seconds
@@ -47,14 +51,14 @@ public class GameScreen extends Page {
         int buildings_id = ResourceManager.addTextureAtlas("Buildings.txt");
         ResourceManager.loadAssets();*/
 
-
+        int powerups_atlas_id = ResourceManager.getId("upgrades_powerups.txt");
         GameManager.SpawnGame(id_map);
         //QuestManager.addQuest(new KillQuest(c));
 
         EntityManager.raiseEvents(ComponentEvent.Awake, ComponentEvent.Start);
 
         Window questWindow = new Window("Current Quest", parent.skin);
-
+        powUpTimer = new Image (ResourceManager.getSprite(powerups_atlas_id, "powerup-2"));
         Quest q = QuestManager.currentQuest();
         Table t = new Table();
         questName = new Label("NAME", parent.skin);
@@ -98,6 +102,32 @@ public class GameScreen extends Page {
         table.add(new Label("Quit", parent.skin)).left();
         table.add(new Image(parent.skin, "key-esc"));
 
+        Window powUps = new Window("Powerups", parent.skin);
+        Table powUpsTable = new Table();
+        powUpsTable.setFillParent(true);
+        powUpsTable.bottom().right();
+        powUps.add(powUpsTable);
+        powUpsTable.add(new Image(ResourceManager.getSprite(powerups_atlas_id, "powerup-0"))).left();
+        powUpsTable.add(new Label("Repairs your hull", parent.skin)).left();
+        powUpsTable.row();
+        powUpsTable.add(new Image(ResourceManager.getSprite(powerups_atlas_id, "powerup-1"))).left();
+        powUpsTable.add(new Label("Replenishes your ammo", parent.skin)).left();
+        powUpsTable.row();
+        powUpsTable.add(new Image(ResourceManager.getSprite(powerups_atlas_id, "powerup-2"))).left();
+        powUpsTable.add(new Label("Provides bad weather resistance", parent.skin)).left();
+        powUpsTable.row();
+        powUpsTable.add(new Image(ResourceManager.getSprite(powerups_atlas_id, "powerup-3"))).left();
+        powUpsTable.add(new Label("Invincibility!", parent.skin)).left();
+        powUpsTable.row();
+        powUpsTable.add(new Image(ResourceManager.getSprite(powerups_atlas_id, "powerup-4"))).left();
+        powUpsTable.add(new Label("Provides a speed boost", parent.skin)).left();
+
+        Table t2 = new Table();
+        t2.bottom().right();
+        t2.add(powUps);
+        t2.setFillParent(true);
+        actors.add(t2);
+
     }
 
     private float accumulator;
@@ -110,7 +140,6 @@ public class GameScreen extends Page {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(BACKGROUND_COLOUR.x, BACKGROUND_COLOUR.y, BACKGROUND_COLOUR.z, 1);
-
         EntityManager.raiseEvents(ComponentEvent.Update, ComponentEvent.Render);
 
         accumulator += EntityManager.getDeltaTime();
@@ -172,6 +201,9 @@ public class GameScreen extends Page {
         healthLabel.setText(String.valueOf(p.getHealth()));
         dosh.setText(String.valueOf(p.getPlunder()));
         ammo.setText(String.valueOf(p.getAmmo()));
+        if (p.isPoweredUp()){
+            powUpTimer.setDrawable(parent.skin.getDrawable("ball"));
+        }
         if (!QuestManager.anyQuests()) {
             parent.end.win();
             parent.setScreen(parent.end);
@@ -205,7 +237,6 @@ public class GameScreen extends Page {
         Table table = new Table();
         table.setFillParent(true);
         actors.add(table);
-
         table.add(new Image(parent.skin.getDrawable("heart"))).top().left().size(1.25f * TILE_SIZE);
         healthLabel = new Label("N/A", parent.skin);
         table.add(healthLabel).top().left().size(50);
@@ -222,7 +253,8 @@ public class GameScreen extends Page {
         table.add(new Image(parent.skin.getDrawable("ball"))).top().left().size(1.25f * TILE_SIZE);
         ammo = new Label("N/A", parent.skin);
         table.add(ammo).top().left().size(50);
-
+        table.row();
+        table.add(powUpTimer).top().left().size(1.25f * TILE_SIZE);
         table.top().left();
     }
 }

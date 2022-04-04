@@ -56,6 +56,8 @@ public class Pirate extends Component {
         this.factionId = factionId;
     }
 
+    public void setHealth(int health){this.health = health;}
+
     public void takeDamage(float dmg) {
         health -= dmg;
         if (health <= 0) {

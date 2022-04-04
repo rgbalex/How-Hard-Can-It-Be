@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Entitys.Ship;
+import com.mygdx.game.Managers.EntityManager;
+import com.mygdx.game.Managers.GameManager;
 import com.mygdx.game.Managers.RenderingManager;
 
 import static com.mygdx.utils.Constants.HALF_DIMENSIONS;
@@ -16,9 +18,10 @@ import static com.mygdx.utils.Constants.HALF_DIMENSIONS;
 public class PlayerController extends Component {
     private Player player;
     private float speed;
-
+    private int powerupTimer;
     public PlayerController() {
         super();
+        powerupTimer = 0;
         type = ComponentType.PlayerController;
         setRequirements(ComponentType.RigidBody);
     }
@@ -40,7 +43,12 @@ public class PlayerController extends Component {
     public void update() {
         super.update();
         final float s = speed;
-
+        if (powerupTimer > 0){
+            if (powerupTimer == 1){
+                stopPowerups();
+            }
+            powerupTimer--;
+        }
         Vector2 dir = getDirFromWASDInput();
         ((Ship) parent).setShipDirection(dir);
         dir.scl(s);
@@ -95,4 +103,51 @@ public class PlayerController extends Component {
         }
         return dir;
     }
+    /**
+     * Multiplies speed by a given amount for a given amount of time, then undoes the speed gain
+     *
+     * @param multiplier the factor by which the speed increases
+     * @param duration the duration (in seconds) that this powerup is active for
+     * */
+    public void gainSpeed(float multiplier, int duration){
+        player.setPoweredUp(true);
+        player.setSpedUp(true);
+        powerupTimer = (int) (duration / EntityManager.getDeltaTime());
+        speed = speed * multiplier;
+    }
+
+    /**
+     * Multiplies speed by a given amount for a given amount of time, then undoes the speed gain
+     * @param duration the duration (in seconds) that this powerup is active for
+     * */
+    public void gainInvincibility(int duration){
+        player.setPoweredUp(true);
+        player.setInvincible(true);
+        powerupTimer = (int) (duration / EntityManager.getDeltaTime());
+        // invincibility stuff
+    }
+
+    /**
+     * Multiplies speed by a given amount for a given amount of time, then undoes the speed gain
+     * @param duration the duration (in seconds) that this powerup is active for
+     * */
+    public void gainWeatherRes(int duration){
+        player.setPoweredUp(true);
+        player.setWeatherResistant(true);
+        powerupTimer = (int) (duration / EntityManager.getDeltaTime());
+    }
+
+    /**
+     * Sets all powerup related flags to false and restores speed to setting specified in the JSON file.
+     * */
+    public void stopPowerups(){
+        player.setPoweredUp(false);
+        player.setInvincible(false);
+        player.setWeatherResistant(false);
+        player.setSpedUp(false);
+        speed = GameManager.getSettings().get("starting").getFloat("playerSpeed"); //resets speed
+    }
+
+    public int getPowerupTimer(){return powerupTimer;}
+
 }

@@ -14,9 +14,13 @@ public class Player extends Ship {
      *
      * @param speed of movement across map
      */
+    private boolean poweredUp; // true when the player is under the effect of a powerup (excluding health and ammo refills.)
+    private boolean invincible; // true when under the effect of a mario star (invincibility powup)
+    private boolean WeatherResistant; // true when under the effect of weather resistance
+    private boolean SpedUp;
     private Player(float speed) {
         super();
-
+        poweredUp = false;
         PlayerController pc = new PlayerController(this, speed);
         addComponent(pc);
 
@@ -34,8 +38,23 @@ public class Player extends Ship {
     public void cleanUp() {
         super.cleanUp();
     }
-
     public int getAmmo() {
         return getComponent(Pirate.class).getAmmo();
     }
+
+    public boolean isPoweredUp(){return poweredUp;}
+
+    public void setPoweredUp(boolean p){poweredUp = p;}
+
+    public boolean isInvincible() { return invincible; }
+
+    public void setInvincible(boolean invincible) { this.invincible = invincible; }
+
+    public boolean isWeatherResistant() { return WeatherResistant; }
+
+    public void setWeatherResistant(boolean weatherResistant) { WeatherResistant = weatherResistant; }
+
+    public boolean isSpedUp() { return SpedUp; }
+
+    public void setSpedUp(boolean spedUp) { SpedUp = spedUp; }
 }
