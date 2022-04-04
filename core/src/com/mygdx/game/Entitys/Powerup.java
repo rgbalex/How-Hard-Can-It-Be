@@ -79,10 +79,14 @@ public class Powerup extends Entity implements CollisionCallBack {
                 p.getComponent(Pirate.class).setAmmo(GameManager.getSettings().get("starting").getInt("ammo"));
                 break;
             case 2: //bad weather res
-                //TODO implement bad weather
+                if (!(p.isPoweredUp())){
+                    p.getComponent(PlayerController.class).gainWeatherRes(4);
+                }
                 break;
             case 3: //invincibility
-                //TODO implement cannonballs dealing damage to player
+                if (!(p.isPoweredUp())){
+                    p.getComponent(PlayerController.class).gainInvincibility(4);
+                }
                 break;
             case 4: //speed boost
                 if (!(p.isPoweredUp())){

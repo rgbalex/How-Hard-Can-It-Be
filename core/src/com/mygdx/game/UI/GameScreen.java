@@ -3,17 +3,21 @@ package com.mygdx.game.UI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Components.ComponentEvent;
 import com.mygdx.game.Components.RigidBody;
 import com.mygdx.game.Components.PlayerController;
 import com.mygdx.game.Entitys.Player;
+import com.mygdx.game.Entitys.Powerup;
 import com.mygdx.game.Managers.*;
 import com.mygdx.game.PirateGame;
 import com.mygdx.game.Quests.Quest;
@@ -26,7 +30,12 @@ public class GameScreen extends Page {
     private Label ammo;
     private final Label questDesc;
     private final Label questName;
-    private Image powUpTimer;
+    private Image bar_green;
+    private Image current_powup;
+    private final TextureRegionDrawable invincibility_drawable = new TextureRegionDrawable(new TextureRegion(new Texture("upgrades_powerups.png"), 256, 0, 32, 32));
+    private final TextureRegionDrawable weather_res_drawable = new TextureRegionDrawable(new TextureRegion(new Texture("upgrades_powerups.png"), 32, 0, 32, 32));
+    private final TextureRegionDrawable speedup_drawable = new TextureRegionDrawable(new TextureRegion(new Texture("upgrades_powerups.png"), 160, 0, 32, 32));
+
     /*private final Label questComplete;
     private float showTimer = 0;
     // in seconds
@@ -58,7 +67,6 @@ public class GameScreen extends Page {
         EntityManager.raiseEvents(ComponentEvent.Awake, ComponentEvent.Start);
 
         Window questWindow = new Window("Current Quest", parent.skin);
-        powUpTimer = new Image (ResourceManager.getSprite(powerups_atlas_id, "powerup-2"));
         Quest q = QuestManager.currentQuest();
         Table t = new Table();
         questName = new Label("NAME", parent.skin);
@@ -79,8 +87,8 @@ public class GameScreen extends Page {
         Table t1 = new Table();
         t1.top().right();
         t1.setFillParent(true);
-        actors.add(t1);
 
+        actors.add(t1);
         Window tutWindow = new Window("Controls", parent.skin);
         Table table = new Table();
         tutWindow.add(table);
@@ -202,12 +210,20 @@ public class GameScreen extends Page {
         dosh.setText(String.valueOf(p.getPlunder()));
         ammo.setText(String.valueOf(p.getAmmo()));
         if (p.isPoweredUp()){
-            powUpTimer.setDrawable(parent.skin.getDrawable("ball"));
+            current_powup.setVisible(true);
+            bar_green.setVisible(true);
+            bar_green.setSize(p.getComponent(PlayerController.class).getPowerupTimer(), 16);
+            if (p.isInvincible()){current_powup.setDrawable(invincibility_drawable);}
+            if (p.isWeatherResistant()){current_powup.setDrawable(weather_res_drawable);}
+            if (p.isSpedUp()){current_powup.setDrawable(speedup_drawable);}
+        }
+        else{
+            current_powup.setVisible(false);
+            bar_green.setVisible(false);
         }
         if (!QuestManager.anyQuests()) {
             parent.end.win();
             parent.setScreen(parent.end);
-
         } else {
             Quest q = QuestManager.currentQuest();
             /*if(Objects.equals(prevQuest, "")) {
@@ -253,8 +269,11 @@ public class GameScreen extends Page {
         table.add(new Image(parent.skin.getDrawable("ball"))).top().left().size(1.25f * TILE_SIZE);
         ammo = new Label("N/A", parent.skin);
         table.add(ammo).top().left().size(50);
+        bar_green = new Image(ResourceManager.getTexture("progress_bar_green.png"));
+        current_powup = new Image();
         table.row();
-        table.add(powUpTimer).top().left().size(1.25f * TILE_SIZE);
+        table.add(current_powup).top().left().center().size(1.25f * TILE_SIZE);
+        table.add(bar_green).top().left().size(1.25f * TILE_SIZE);
         table.top().left();
     }
 }

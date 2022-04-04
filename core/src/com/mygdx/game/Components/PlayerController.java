@@ -145,6 +145,7 @@ public class PlayerController extends Component {
         player.setInvincible(false);
         player.setWeatherResistant(false);
         player.setSpedUp(false);
+        powerupTimer = 0;
         speed = GameManager.getSettings().get("starting").getFloat("playerSpeed"); //resets speed
     }
 
