@@ -34,7 +34,6 @@ public class GameScreen extends Page {
     private final TextureRegionDrawable invincibility_drawable = new TextureRegionDrawable(new TextureRegion(new Texture("upgrades_powerups.png"), 256, 0, 32, 32));
     private final TextureRegionDrawable weather_res_drawable = new TextureRegionDrawable(new TextureRegion(new Texture("upgrades_powerups.png"), 32, 0, 32, 32));
     private final TextureRegionDrawable speedup_drawable = new TextureRegionDrawable(new TextureRegion(new Texture("upgrades_powerups.png"), 160, 0, 32, 32));
-    private Image powUpTimer;
     private int timer_points;
     private int frame_timer;
     private int alpha_timer;
@@ -310,8 +309,8 @@ public class GameScreen extends Page {
         dosh.setText(String.valueOf(p.getPlunder()));
         ammo.setText(String.valueOf(p.getAmmo()));
         if (p.isPoweredUp()){
-            current_powup.setVisible(true);
-            bar_green.setVisible(true);
+            if (!current_powup.isVisible()){ current_powup.setVisible(true); }
+            if (!bar_green.isVisible()){ bar_green.setVisible(true); }
             bar_green.setSize(p.getComponent(PlayerController.class).getPowerupTimer(), 16);
             if (p.isInvincible()){current_powup.setDrawable(invincibility_drawable);}
             if (p.isWeatherResistant()){current_powup.setDrawable(weather_res_drawable);}
@@ -321,7 +320,7 @@ public class GameScreen extends Page {
             current_powup.setVisible(false);
             bar_green.setVisible(false);
         }
-        points.setText("Points: " + (p.getPlunder()*10+timer_points));
+        points.setText(p.getPlunder() * 10 + timer_points);
         if (!QuestManager.anyQuests()) {
             parent.end.win();
             parent.setScreen(parent.end);
@@ -374,9 +373,9 @@ public class GameScreen extends Page {
         bar_green = new Image(ResourceManager.getTexture("progress_bar_green.png"));
         current_powup = new Image();
         table.row();
+        table.add(new Image(ResourceManager.getTexture("points_star.png")));
         points = new Label("N/A", parent.skin);
         table.add(points).top().left().size(50);
-
         table.row();
         table.add(current_powup).top().left().center().size(1.25f * TILE_SIZE);
         table.add(bar_green).top().left().size(1.25f * TILE_SIZE);

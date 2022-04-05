@@ -1,6 +1,7 @@
 package com.mygdx.game.Entitys;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Components.*;
 import com.mygdx.game.Managers.EntityManager;
 import com.mygdx.game.Managers.GameManager;
@@ -9,6 +10,9 @@ import com.mygdx.game.Managers.ResourceManager;
 import com.mygdx.game.Physics.CollisionCallBack;
 import com.mygdx.game.Physics.CollisionInfo;
 import com.mygdx.game.Physics.PhysicsBodyType;
+import com.mygdx.utils.Constants;
+
+import java.util.Random;
 
 public class Powerup extends Entity implements CollisionCallBack {
     /** A collectable powerup that appears on the playing field.
@@ -26,12 +30,16 @@ public class Powerup extends Entity implements CollisionCallBack {
     * */
     private int type;
     private boolean justCollected;
+    private final Random rand = new Random();
     public Powerup(int type){
         super();
         this.type = type;
         justCollected = false;
         Transform t = new Transform();
-        t.setPosition(-1000, 1000); // created offscreen
+        t.setPosition(
+                GameManager.randomWaterCell().x * Constants.TILE_SIZE,
+                GameManager.randomWaterCell().y * Constants.TILE_SIZE
+        );
         t.setScale(0.5f, 0.5f);
         Renderable r = new Renderable(
                 ResourceManager.getId(
@@ -62,35 +70,47 @@ public class Powerup extends Entity implements CollisionCallBack {
         super.update();
         if (justCollected){
             justCollected = false;
-            moveOffScreen();
+            updateType(rand.nextInt(5)); // picks new type
+            Vector2 new_pos = GameManager.randomWaterCell();
+            place(new_pos.x* Constants.TILE_SIZE, new_pos.y* Constants.TILE_SIZE);
         }
-    }
-
-    public void moveOffScreen(){
-        place(-1000f, -1000f);
     }
 
     public void applyPowUp(Player p){
         switch (type){
             case 0: // health refill
+                p.plunder(10);
                 p.getComponent(Pirate.class).setHealth(GameManager.getSettings().get("starting").getInt("health"));
                 break;
             case 1: // ammo refill
+                p.plunder(10);
                 p.getComponent(Pirate.class).setAmmo(GameManager.getSettings().get("starting").getInt("ammo"));
                 break;
             case 2: //bad weather res
                 if (!(p.isPoweredUp())){
+                    p.plunder(10);
                     p.getComponent(PlayerController.class).gainWeatherRes(4);
+                }
+                else{
+                    p.plunder(20);
                 }
                 break;
             case 3: //invincibility
                 if (!(p.isPoweredUp())){
+                    p.plunder(10);
                     p.getComponent(PlayerController.class).gainInvincibility(4);
+                }
+                else{
+                    p.plunder(20);
                 }
                 break;
             case 4: //speed boost
                 if (!(p.isPoweredUp())){
+                    p.plunder(10);
                     p.getComponent(PlayerController.class).gainSpeed(2f, 4);
+                }
+                else{
+                    p.plunder(20);
                 }
                 break;
         }

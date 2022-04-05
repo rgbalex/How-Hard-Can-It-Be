@@ -13,6 +13,7 @@ import com.mygdx.utils.QueueFIFO;
 import com.mygdx.utils.Utilities;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Responsible for creating most entity's associated with the game. Also the cached chest and cannonballs
@@ -26,7 +27,7 @@ public final class GameManager {
     private static final int cacheSize = 20;
     private static ArrayList<CannonBall> ballCache;
     private static int currentElement;
-    private static Powerup [] powerups;  // TODO remove after testing
+    private static Powerup [] powerups;
     private static JsonValue settings;
 
     private static TileMapGraph mapGraph;
@@ -37,14 +38,12 @@ public final class GameManager {
     public static void Initialize() {
         initialized = true;
         currentElement = 0;
-        settings = new JsonReader().
-                parse(Gdx.files.internal("GameSettings.json"));
-
+        settings = new JsonReader().parse(Gdx.files.internal("GameSettings.json"));
         factions = new ArrayList<>();
         ships = new ArrayList<>();
         ballCache = new ArrayList<>(cacheSize);
         colleges = new ArrayList<>();
-        powerups = new Powerup[] {new Powerup(0), new Powerup(1),new Powerup(2),new Powerup(3),new Powerup(4)}; // TODO remove after testing
+        powerups = new Powerup[40];
         for (int i = 0; i < cacheSize; i++) {
             ballCache.add(new CannonBall());
         }
@@ -108,9 +107,6 @@ public final class GameManager {
         p.setFaction(1);
         p.getComponent(Pirate.class).takeDamage(10f);
         ships.add(p);
-        for (int i = 0; i < 5; i++){
-            powerups[i].place(p.getPosition().x + (35 * i), p.getPosition().y + 35);
-        }
     }
 
     /**
@@ -136,6 +132,10 @@ public final class GameManager {
         tryInit();
         WorldMap map = new WorldMap(mapId);
         mapGraph = new TileMapGraph(map.getTileMap());
+        Random r = new Random();
+        for (int i = 0; i < powerups.length; i++){
+            powerups[i] = new Powerup(r.nextInt(5));
+        }
     }
 
     /**
@@ -197,5 +197,11 @@ public final class GameManager {
      */
     public static QueueFIFO<Vector2> getPath(Vector2 loc, Vector2 dst) {
         return mapGraph.findOptimisedPath(loc, dst);
+    }
+
+    public static Vector2 randomWaterCell(){
+        Random r = new Random();
+        Vector2 pos = mapGraph.getNodes().get(r.nextInt(mapGraph.getNodeCount())).getPosition();
+        return pos;
     }
 }

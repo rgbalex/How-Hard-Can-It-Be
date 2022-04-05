@@ -37,6 +37,7 @@ public class TileMapGraph implements IndexedGraph<Node> {
         mapDim = new Vector2();
     }
 
+
     /**
      * Creates a Graph from the given tilemap
      *
@@ -284,4 +285,6 @@ public class TileMapGraph implements IndexedGraph<Node> {
 
         return new Array<>();
     }
+
+    public Array<Node> getNodes(){return nodes;}
 }
