@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.mygdx.utils.QueueFIFO;
 
+import java.util.Random;
+
 import static com.mygdx.utils.TileMapCells.OBSTACLE;
 import static com.mygdx.utils.TileMapCells.PASSABLE;
 
@@ -25,6 +27,7 @@ public class TileMapGraph implements IndexedGraph<Node> {
     private final Array<Node> nodes;
     private final Array<Path> paths;
     private final Vector2 mapDim;
+    private final Array<Vector2> waterNodes; // stores all node positions that are Water cells (used for powerups)
 
     private final ObjectMap<Node, Array<Connection<Node>>> nodePaths;
 
@@ -35,6 +38,7 @@ public class TileMapGraph implements IndexedGraph<Node> {
         paths = new Array<>();
         nodePaths = new ObjectMap<>();
         mapDim = new Vector2();
+        waterNodes = new Array<>();
     }
 
 
@@ -48,11 +52,14 @@ public class TileMapGraph implements IndexedGraph<Node> {
 
         MapLayers layers = map.getLayers();
         TiledMapTileLayer layer = null;
-
+        TiledMapTileLayer layer_vis = null;
         // find the collision layer
         for (MapLayer l : layers) {
             if (l.getName().equals("Collision")) {
                 layer = (TiledMapTileLayer) l;
+            }
+            if (l.getName().equals("Visible")) {
+                layer_vis = (TiledMapTileLayer) l;
             }
         }
         // if there is no collision layer
@@ -63,7 +70,6 @@ public class TileMapGraph implements IndexedGraph<Node> {
         mapDim.set(layer.getWidth(), layer.getHeight());
 
         nodes.ensureCapacity((int) mapDim.x * (int) mapDim.y);
-
         // create all the nodes
         for (int i = 0; i < mapDim.x * mapDim.y; i++) {
             nodes.add(new Node(0, 0));
@@ -74,9 +80,12 @@ public class TileMapGraph implements IndexedGraph<Node> {
             // for each row
             for (int y = 0; y < layer.getHeight(); y++) {
                 TiledMapTileLayer.Cell center = layer.getCell(x, y);
-
+                TiledMapTileLayer.Cell center_vis = layer_vis.getCell(x, y);
                 if (getType(center) == OBSTACLE) {
                     continue;
+                }
+                else if (center_vis.getTile().getId() == 82){ // powerups do not spawn in "corners" so that they are approachable from every angle
+                    waterNodes.add(new Vector2(x, y));
                 }
                 // the central node
                 addNode(x, y);
@@ -98,7 +107,6 @@ public class TileMapGraph implements IndexedGraph<Node> {
 
                         // is the cell passable
                         if (cell.getTile().getId() == PASSABLE) {
-
                             addNode(x + i, y + j);
                             addPath(x, y, x + i, y + j);
                         }
@@ -286,5 +294,6 @@ public class TileMapGraph implements IndexedGraph<Node> {
         return new Array<>();
     }
 
-    public Array<Node> getNodes(){return nodes;}
+    public Array<Vector2> getWaterNodes(){return waterNodes;}
+    public int getWaterCount(){return waterNodes.size;}
 }

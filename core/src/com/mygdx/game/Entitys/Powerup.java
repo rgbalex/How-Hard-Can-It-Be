@@ -36,9 +36,10 @@ public class Powerup extends Entity implements CollisionCallBack {
         this.type = type;
         justCollected = false;
         Transform t = new Transform();
+        Vector2 pos = GameManager.randomWaterCell();
         t.setPosition(
-                GameManager.randomWaterCell().x * Constants.TILE_SIZE,
-                GameManager.randomWaterCell().y * Constants.TILE_SIZE
+                pos.x * Constants.TILE_SIZE,
+                pos.y * Constants.TILE_SIZE
         );
         t.setScale(0.5f, 0.5f);
         Renderable r = new Renderable(
@@ -72,7 +73,7 @@ public class Powerup extends Entity implements CollisionCallBack {
             justCollected = false;
             updateType(rand.nextInt(5)); // picks new type
             Vector2 new_pos = GameManager.randomWaterCell();
-            place(new_pos.x* Constants.TILE_SIZE, new_pos.y* Constants.TILE_SIZE);
+            place(new_pos.x * Constants.TILE_SIZE, new_pos.y * Constants.TILE_SIZE);
         }
     }
 
@@ -92,7 +93,7 @@ public class Powerup extends Entity implements CollisionCallBack {
                     p.getComponent(PlayerController.class).gainWeatherRes(4);
                 }
                 else{
-                    p.plunder(20);
+                    p.plunder(20); // player already using a different powerup: the current one disappears and gives plunder to the player with no other effects.
                 }
                 break;
             case 3: //invincibility

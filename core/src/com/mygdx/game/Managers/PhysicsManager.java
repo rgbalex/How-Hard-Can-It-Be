@@ -43,7 +43,7 @@ public final class PhysicsManager {
         box2DBodies = new ArrayList<>();
         box2DWorld.setContactListener(new CollisionManager());
         if (drawDebug) {
-            debug = new Box2DDebugRenderer(true, false, true, true, false, true);
+            debug = new Box2DDebugRenderer(true, true, true, true, true, true);
         }
     }
 

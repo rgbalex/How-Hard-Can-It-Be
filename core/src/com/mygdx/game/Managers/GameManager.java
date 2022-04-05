@@ -43,7 +43,7 @@ public final class GameManager {
         ships = new ArrayList<>();
         ballCache = new ArrayList<>(cacheSize);
         colleges = new ArrayList<>();
-        powerups = new Powerup[40];
+        powerups = new Powerup[50];
         for (int i = 0; i < cacheSize; i++) {
             ballCache.add(new CannonBall());
         }
@@ -201,7 +201,7 @@ public final class GameManager {
 
     public static Vector2 randomWaterCell(){
         Random r = new Random();
-        Vector2 pos = mapGraph.getNodes().get(r.nextInt(mapGraph.getNodeCount())).getPosition();
+        Vector2 pos = mapGraph.getWaterNodes().get(r.nextInt(mapGraph.getWaterCount()));
         return pos;
     }
 }
