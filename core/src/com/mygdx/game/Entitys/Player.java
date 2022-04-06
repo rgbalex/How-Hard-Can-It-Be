@@ -1,12 +1,9 @@
 package com.mygdx.game.Entitys;
 
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Components.Pirate;
 import com.mygdx.game.Components.PlayerController;
-import com.mygdx.game.Components.Renderable;
-import com.mygdx.game.Components.Transform;
 import com.mygdx.game.Managers.GameManager;
-import com.mygdx.game.Managers.RenderLayer;
-import com.mygdx.game.Managers.ResourceManager;
 
 /**
  * Player's ship entity.
@@ -22,6 +19,8 @@ public class Player extends Ship {
     private boolean invincible; // true when under the effect of a mario star (invincibility powup)
     private boolean WeatherResistant; // true when under the effect of weather resistance
     private boolean SpedUp;
+    private boolean badWeather = false;
+
     private Player(float speed) {
         super();
         poweredUp = false;
@@ -60,4 +59,8 @@ public class Player extends Ship {
     public boolean isSpedUp() { return SpedUp; }
 
     public void setSpedUp(boolean spedUp) { SpedUp = spedUp; }
+
+    public void setBadWeather(boolean weather) {badWeather = weather;}
+
+    public boolean getBadWeather() {return badWeather;}
 }

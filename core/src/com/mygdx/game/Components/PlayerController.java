@@ -19,6 +19,7 @@ public class PlayerController extends Component {
     private Player player;
     private float speed;
     private int powerupTimer;
+    private final Vector2 modifier = new Vector2(-16,-24);
     public PlayerController() {
         super();
         powerupTimer = 0;
@@ -52,8 +53,15 @@ public class PlayerController extends Component {
         Vector2 dir = getDirFromWASDInput();
         ((Ship) parent).setShipDirection(dir);
         dir.scl(s);
+//        Here we can scale speed and weather effects by difficulty.
+//        modifier.scl(difficulty);
 
         RigidBody rb = parent.getComponent(RigidBody.class);
+        if (player.getBadWeather()) {
+            if (!player.isWeatherResistant()) {
+                dir = dir.add(modifier);
+            }
+        }
         rb.setVelocity(dir);
 
         RenderingManager.getCamera().position.set(new Vector3(player.getPosition(), 0.0f));

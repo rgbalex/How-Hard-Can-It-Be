@@ -37,6 +37,7 @@ public class GameScreen extends Page {
     private int timer_points;
     private int frame_timer;
     private int alpha_timer;
+    private Boolean is_bad_weather;
 
     private final SpriteBatch effectBatch = new SpriteBatch();
     private final Texture darken = new Texture(Gdx.files.internal("darken.png"));
@@ -278,21 +279,27 @@ public class GameScreen extends Page {
 
 //        Effects are drawn first so they are underneath the UI
 //        Fade In
-        if (timer_points >= 10 && timer_points < 25) {
+        if ((timer_points%60) >= 10 && (timer_points%60) < 25) {
+            if (!p.getBadWeather()) {
+                p.setBadWeather(true);
+            }
             bad_weather_sprite_dark.setAlpha(alpha_timer / 255f);
             for (Sprite sprite : rainfall_list) {sprite.setAlpha(alpha_timer / 255f);}
             if (alpha_timer < 254) {alpha_timer++;}
         }
 
 //        Fade Out
-        if (timer_points >= 30 && timer_points < 35) {
+        if ((timer_points%60) >= 30 && (timer_points%60) < 35) {
+            if (p.getBadWeather()) {
+                p.setBadWeather(false);
+            }
             bad_weather_sprite_dark.setAlpha(alpha_timer / 255f);
             for (Sprite sprite : rainfall_list) {sprite.setAlpha(alpha_timer / 255f);}
             if (alpha_timer > 1) {alpha_timer --;}
         }
 
 //        Rain Animation
-        if (timer_points >= 10 && timer_points < 40) {
+        if ((timer_points%60) >= 10 && (timer_points%60) < 40) {
             effectBatch.begin();
             bad_weather_sprite_dark.draw(effectBatch);
             for (Sprite sprite : rainfall_list) {
@@ -311,7 +318,7 @@ public class GameScreen extends Page {
         if (p.isPoweredUp()){
             if (!current_powup.isVisible()){ current_powup.setVisible(true); }
             if (!bar_green.isVisible()){ bar_green.setVisible(true); }
-            bar_green.setSize(p.getComponent(PlayerController.class).getPowerupTimer(), 16);
+            bar_green.setSize(p.getComponent(PlayerController.class).getPowerupTimer()/2f, 16);
             if (p.isInvincible()){current_powup.setDrawable(invincibility_drawable);}
             if (p.isWeatherResistant()){current_powup.setDrawable(weather_res_drawable);}
             if (p.isSpedUp()){current_powup.setDrawable(speedup_drawable);}
