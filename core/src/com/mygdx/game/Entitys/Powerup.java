@@ -83,7 +83,7 @@ public class Powerup extends Entity implements CollisionCallBack {
         switch (type){
             case 0: // health refill
                 p.plunder(10);
-                p.getComponent(Pirate.class).setHealth(GameManager.getSettings().get("starting").getInt("health"));
+                p.getComponent(Pirate.class).setHealth(p.getComponent(Pirate.class).getMaxHealth());
                 break;
             case 1: // ammo refill
                 p.plunder(10);
