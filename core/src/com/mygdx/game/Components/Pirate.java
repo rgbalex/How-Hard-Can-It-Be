@@ -14,15 +14,19 @@ public class Pirate extends Component {
     private int points;
     private int factionId;
     private int plunder;
+    private int currentPlunder;
     protected boolean isAlive;
     private int health;
     private int ammo;
     private final int attackDmg;
+    private int maxAmmo;
+    private int maxHealth;
 
     /**
      * The enemy that is being targeted by the AI.
      */
     private final QueueFIFO<Ship> targets;
+
 
     public Pirate() {
         super();
@@ -36,6 +40,9 @@ public class Pirate extends Component {
         health = starting.getInt("health");
         attackDmg = starting.getInt("damage");
         ammo = starting.getInt("ammo");
+        maxAmmo = ammo;
+        maxHealth = health;
+        currentPlunder = plunder;
     }
 
     public void addTarget(Ship target) {
@@ -48,6 +55,14 @@ public class Pirate extends Component {
 
     public void addPlunder(int money) {
         plunder += money;
+        currentPlunder += money;
+    }
+
+    public void spendPlunder(int amount){
+        currentPlunder -= amount;
+    }
+    public int getCurrentPlunder(){
+        return currentPlunder;
     }
 
     public int getPoints() { return points; }
@@ -162,5 +177,16 @@ public class Pirate extends Component {
 
     public QueueFIFO<Ship> getTargets() {
         return targets;
+    }
+
+    public int getMaxAmmo(){return maxAmmo;}
+    public void setMaxAmmo(int newAmmo){maxAmmo = newAmmo;}
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
     }
 }

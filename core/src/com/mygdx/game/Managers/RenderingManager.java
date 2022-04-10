@@ -19,11 +19,12 @@ public final class RenderingManager {
     private static ArrayList<ArrayList<Integer>> layers;
     private static OrthographicCamera camera;
     private static SpriteBatch batch;
+    private static boolean paused;
 
     public static void Initialize() {
         initialized = true;
         renderItems = new ArrayList<>();
-
+        paused = false;
         batch = new SpriteBatch();
         // batch.enableBlending();
         camera = new OrthographicCamera();
@@ -79,26 +80,25 @@ public final class RenderingManager {
      */
     public static void render() {
         tryInit();
+            batch.setProjectionMatrix(camera.combined);
+            batch.begin();
 
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-
-        for (ArrayList<Integer> layer : layers) {
-            for (Integer itemIndex : layer) {
-                Component item = renderItems.get(itemIndex);
-                if (item.getParent() instanceof Building) {
-                    int i = 0;
+            for (ArrayList<Integer> layer : layers) {
+                for (Integer itemIndex : layer) {
+                    Component item = renderItems.get(itemIndex);
+                    if (item.getParent() instanceof Building) {
+                        int i = 0;
+                    }
+                    item.render();
                 }
-                item.render();
             }
-        }
 
         /*for(int i = 0; i < renderItems.size(); i++){
             //renderItems.get(renderItems.size() - (1 + i)).render();
             renderItems.get(i).render();
         }*/
 
-        batch.end();
+            batch.end();
     }
 
     public static void cleanUp() {
@@ -108,4 +108,6 @@ public final class RenderingManager {
     public static SpriteBatch getBatch() {
         return batch;
     }
+    public static void flipPaused(){paused = !paused;}
+    public static boolean isPaused(){return paused;}
 }

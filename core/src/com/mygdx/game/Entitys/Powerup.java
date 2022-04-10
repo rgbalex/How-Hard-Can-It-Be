@@ -36,7 +36,7 @@ public class Powerup extends Entity implements CollisionCallBack {
         this.type = type;
         justCollected = false;
         Transform t = new Transform();
-        Vector2 pos = GameManager.randomWaterCell();
+        Vector2 pos = GameManager.randomWaterCell(); //
         t.setPosition(
                 pos.x * Constants.TILE_SIZE,
                 pos.y * Constants.TILE_SIZE
@@ -54,6 +54,7 @@ public class Powerup extends Entity implements CollisionCallBack {
     }
 
     public void place(float x, float y){
+
         getComponent(Transform.class).setPosition(x, y);
     }
 
@@ -71,6 +72,7 @@ public class Powerup extends Entity implements CollisionCallBack {
         super.update();
         if (justCollected){
             justCollected = false;
+            place(-100000f, -100000f); // placed off screen while type is being changed and new location being determined
             updateType(rand.nextInt(5)); // picks new type
             Vector2 new_pos = GameManager.randomWaterCell();
             place(new_pos.x * Constants.TILE_SIZE, new_pos.y * Constants.TILE_SIZE);
@@ -85,7 +87,7 @@ public class Powerup extends Entity implements CollisionCallBack {
                 break;
             case 1: // ammo refill
                 p.plunder(10);
-                p.getComponent(Pirate.class).setAmmo(GameManager.getSettings().get("starting").getInt("ammo"));
+                p.getComponent(Pirate.class).setAmmo(p.getComponent(Pirate.class).getMaxAmmo());
                 break;
             case 2: //bad weather res
                 if (!(p.isPoweredUp())){

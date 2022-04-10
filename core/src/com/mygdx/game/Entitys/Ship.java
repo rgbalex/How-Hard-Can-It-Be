@@ -31,7 +31,12 @@ public class Ship extends Entity implements CollisionCallBack {
      */
     public Ship() {
         super(4);
-        currentDir = new Vector2();
+        if (this instanceof Player){
+            currentDir = new Vector2(0, 1); //fixes bug where if player didnt move before firing, the bullet would go in a random direction
+        }
+        else{
+            currentDir = new Vector2();
+        }
         setName("Ship (" + shipCount++ + ")"); // each ship has a unique name
 
         if (shipDirections == null) {

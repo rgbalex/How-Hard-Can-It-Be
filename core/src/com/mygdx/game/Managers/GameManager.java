@@ -199,6 +199,11 @@ public final class GameManager {
         return mapGraph.findOptimisedPath(loc, dst);
     }
 
+
+    /**
+     * Gets a random map cell, which is made of water and does not immediately border any land cells
+     *
+     * */
     public static Vector2 randomWaterCell(){
         Random r = new Random();
         Vector2 pos = mapGraph.getWaterNodes().get(r.nextInt(mapGraph.getWaterCount()));

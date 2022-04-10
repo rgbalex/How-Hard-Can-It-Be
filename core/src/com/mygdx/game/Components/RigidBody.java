@@ -3,6 +3,7 @@ package com.mygdx.game.Components;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.Managers.PhysicsManager;
+import com.mygdx.game.Managers.RenderingManager;
 import com.mygdx.game.Physics.CollisionCallBack;
 import com.mygdx.game.Physics.PhysicsBodyType;
 
@@ -146,13 +147,13 @@ public class RigidBody extends Component {
      */
     @Override
     public void update() {
-        super.update();
-        // parent.getComponent(Transform.class).setPosition(PhysicsManager.getBody(bodyId).getPosition());
-        Transform t = parent.getComponent(Transform.class);
-        Body b = getBody();
-        Vector2 p = b.getPosition().cpy();
-        p.sub(halfDim);
-        t.setPosition(p, false);
+            super.update();
+            // parent.getComponent(Transform.class).setPosition(PhysicsManager.getBody(bodyId).getPosition());
+            Transform t = parent.getComponent(Transform.class);
+            Body b = getBody();
+            Vector2 p = b.getPosition().cpy();
+            p.sub(halfDim);
+            t.setPosition(p, false);
     }
 
     public Vector2 getVelocity() {

@@ -118,10 +118,10 @@ public final class PhysicsManager {
 
     public static void update() {
         tryInit();
-        box2DWorld.step(PHYSICS_TIME_STEP, 6, 2);
+            box2DWorld.step(PHYSICS_TIME_STEP, 6, 2);
 
-        if (debug != null) {
-            debug.render(box2DWorld, RenderingManager.getCamera().combined);
+            if (debug != null) {
+                debug.render(box2DWorld, RenderingManager.getCamera().combined);
         }
     }
 

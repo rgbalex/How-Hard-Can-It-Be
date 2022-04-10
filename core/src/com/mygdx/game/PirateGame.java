@@ -33,13 +33,14 @@ public class PirateGame extends Game {
         int atlas_id = ResourceManager.addTextureAtlas("Boats.txt");
         int extras_id = ResourceManager.addTextureAtlas("UISkin/skin.atlas");
         int buildings_id = ResourceManager.addTextureAtlas("Buildings.txt");
-        int id_powups = ResourceManager.addTexture("upgrades_powerups.png");
         int powups_atlas_id = ResourceManager.addTextureAtlas("upgrades_powerups.txt");
         ResourceManager.addTexture("menuBG.jpg");
         ResourceManager.addTexture("Chest.png");
         ResourceManager.addTexture("progress_bar_red.png");
         ResourceManager.addTexture("progress_bar_green.png");
         ResourceManager.addTexture("points_star.png");
+        ResourceManager.addTextureAtlas("upgrade_tier_bar.txt");
+        ResourceManager.addTextureAtlas("upgrade_pricetags.txt");
         ResourceManager.loadAssets();
         // cant load any more resources after this point (just functionally I choose not to implement)
         stage = new Stage(new ScreenViewport());

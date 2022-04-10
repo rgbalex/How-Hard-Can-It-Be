@@ -3,7 +3,7 @@ size: 320, 32
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-beer_mug_health_increase
+beer_mug
   rotate: false
   xy: 0, 0
   size: 32, 32
@@ -17,7 +17,7 @@ powerup-2
   orig: 32, 32
   offset: 0, 0
   index: -1
-wrench_health_repair
+wrench
   rotate: false
   xy: 64, 0
   size: 32, 32
@@ -45,7 +45,7 @@ powerup-4
   orig: 32, 32
   offset: 0, 0
   index: -1
-explosion_dmg_increase
+explosion
   rotate: false
   xy: 192, 0
   size: 32, 32

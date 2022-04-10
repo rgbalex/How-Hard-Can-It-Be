@@ -1,5 +1,6 @@
 package com.mygdx.game.UI;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -7,14 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.Components.ComponentEvent;
-import com.mygdx.game.Components.PlayerController;
+import com.mygdx.game.Components.*;
 import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Managers.*;
 import com.mygdx.game.PirateGame;
@@ -38,12 +38,32 @@ public class GameScreen extends Page {
     private int frame_timer;
     private int alpha_timer;
     private Boolean is_bad_weather;
-
+    private Boolean paused = false;
+    private Boolean shopOpen = false;
+    private Image shop;
+    private Window shopWindow;
+    private Window pauseScreen;
     private final SpriteBatch effectBatch = new SpriteBatch();
     private final Texture darken = new Texture(Gdx.files.internal("darken.png"));
     private final Sprite bad_weather_sprite_dark = new Sprite(darken, 2000,2000);
-
     private final Sprite[] rainfall_list = new Sprite[9];
+    private Table upgrades;
+    private Table shopTable;
+    private final TextureRegionDrawable upg_0 = new TextureRegionDrawable(new TextureRegion(ResourceManager.getSprite(ResourceManager.getId("upgrade_tier_bar.txt"), "tier-0")));
+    private final TextureRegionDrawable upg_1 = new TextureRegionDrawable(new TextureRegion(ResourceManager.getSprite(ResourceManager.getId("upgrade_tier_bar.txt"), "tier-1")));
+    private final TextureRegionDrawable upg_2 = new TextureRegionDrawable(new TextureRegion(ResourceManager.getSprite(ResourceManager.getId("upgrade_tier_bar.txt"), "tier-2")));
+    private final TextureRegionDrawable upg_3 = new TextureRegionDrawable(new TextureRegion(ResourceManager.getSprite(ResourceManager.getId("upgrade_tier_bar.txt"), "tier-3")));
+    private Image speed_upg_bar;
+    private Image health_upg_bar;
+    private Image damage_upg_bar;
+    private Image ammo_upg_bar;
+    private int health_level = 0;
+    private int ammo_level = 0;
+    private int speed_level = 0;
+    private int damage_level = 0;
+    private TextureRegionDrawable[] upgrade_bar_components = new TextureRegionDrawable[] {upg_0, upg_1, upg_2, upg_3};
+    private TextButton health_buy, ammo_buy, speed_buy, damage_buy;
+    private TextButton [] shop_buttons = new TextButton[] {health_buy, ammo_buy, speed_buy, damage_buy};
 
     /*private final Label questComplete;
     private float showTimer = 0;
@@ -76,6 +96,7 @@ public class GameScreen extends Page {
         EntityManager.raiseEvents(ComponentEvent.Awake, ComponentEvent.Start);
 
         Window questWindow = new Window("Current Quest", parent.skin);
+        questWindow.setMovable(false);
         Quest q = QuestManager.currentQuest();
         Table t = new Table();
         questName = new Label("NAME", parent.skin);
@@ -99,6 +120,7 @@ public class GameScreen extends Page {
 
         actors.add(t1);
         Window tutWindow = new Window("Controls", parent.skin);
+        tutWindow.setMovable(false);
         Table table = new Table();
         tutWindow.add(table);
         t1.add(tutWindow);
@@ -116,10 +138,11 @@ public class GameScreen extends Page {
         table.add(new Label("Shoot in direction of ship", parent.skin)).left();
         table.add(new Image(parent.skin, "space"));
         table.row();
-        table.add(new Label("Quit", parent.skin)).left();
+        table.add(new Label("Pause", parent.skin)).left(); //Pauses instead of quitting now
         table.add(new Image(parent.skin, "key-esc"));
 
         Window powUps = new Window("Powerups", parent.skin);
+        powUps.setMovable(false);
         Table powUpsTable = new Table();
         powUpsTable.setFillParent(true);
         powUpsTable.bottom().right();
@@ -212,23 +235,33 @@ public class GameScreen extends Page {
      */
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(BACKGROUND_COLOUR.x, BACKGROUND_COLOUR.y, BACKGROUND_COLOUR.z, 1);
-        EntityManager.raiseEvents(ComponentEvent.Update, ComponentEvent.Render);
-
-        accumulator += EntityManager.getDeltaTime();
-
-        // fixed update loop so that physics manager is called regally rather than somewhat randomly
-        while (accumulator >= PHYSICS_TIME_STEP) {
-            PhysicsManager.update();
-            accumulator -= PHYSICS_TIME_STEP;
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.P)) && !paused){
+            shopOpen = !shopOpen;
         }
-
-        GameManager.update();
-        // show end screen if esc is pressed
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            parent.setScreen(parent.end);
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            paused = !paused;
         }
-        super.render(delta);
+        if(!paused && !shopOpen) {
+            ScreenUtils.clear(BACKGROUND_COLOUR.x, BACKGROUND_COLOUR.y, BACKGROUND_COLOUR.z, 1);
+            EntityManager.raiseEvents(ComponentEvent.Update);
+            EntityManager.raiseEvents(ComponentEvent.Render);
+            accumulator += EntityManager.getDeltaTime();
+
+            // fixed update loop so that physics manager is called regally rather than somewhat randomly
+            while (accumulator >= PHYSICS_TIME_STEP) {
+                PhysicsManager.update();
+                accumulator -= PHYSICS_TIME_STEP;
+            }
+
+            GameManager.update();
+            // changed to pause the game instead
+            super.render(delta);
+        }
+        else{
+            ScreenUtils.clear(BACKGROUND_COLOUR.x, BACKGROUND_COLOUR.y, BACKGROUND_COLOUR.z, 1);
+            EntityManager.raiseEvents(ComponentEvent.Render); //needs to be called or complete chaos ensues
+            super.render(delta); // renders ui (not updated w/ time)
+        }
     }
 
     /**
@@ -269,70 +302,94 @@ public class GameScreen extends Page {
     //private String prevQuest = "";
     @Override
     protected void update() {
-        super.update();
-        Player p = GameManager.getPlayer();
-        frame_timer += 1;
-        if (frame_timer > 60) {
-            frame_timer = 0;
-            timer_points += 1;
-        }
+        if(!paused && !shopOpen) {
+            shopWindow.setVisible(false);
+            pauseScreen.setVisible(false);
+            super.update();
+            Player p = GameManager.getPlayer();
+            frame_timer += 1;
+            if (frame_timer > 60) {
+                frame_timer = 0;
+                timer_points += 1;
+            }
 
 //        Effects are drawn first so they are underneath the UI
 //        Fade In
-        if ((timer_points%60) >= 10 && (timer_points%60) < 25) {
-            if (!p.getBadWeather()) {
-                p.setBadWeather(true);
+            if ((timer_points % 60) >= 10 && (timer_points % 60) < 25) {
+                if (!p.getBadWeather()) {
+                    p.setBadWeather(true);
+                }
+                bad_weather_sprite_dark.setAlpha(alpha_timer / 255f);
+                for (Sprite sprite : rainfall_list) {
+                    sprite.setAlpha(alpha_timer / 255f);
+                }
+                if (alpha_timer < 254) {
+                    alpha_timer++;
+                }
             }
-            bad_weather_sprite_dark.setAlpha(alpha_timer / 255f);
-            for (Sprite sprite : rainfall_list) {sprite.setAlpha(alpha_timer / 255f);}
-            if (alpha_timer < 254) {alpha_timer++;}
-        }
 
 //        Fade Out
-        if ((timer_points%60) >= 30 && (timer_points%60) < 35) {
-            if (p.getBadWeather()) {
-                p.setBadWeather(false);
+            if ((timer_points % 60) >= 30 && (timer_points % 60) < 35) {
+                if (p.getBadWeather()) {
+                    p.setBadWeather(false);
+                }
+                bad_weather_sprite_dark.setAlpha(alpha_timer / 255f);
+                for (Sprite sprite : rainfall_list) {
+                    sprite.setAlpha(alpha_timer / 255f);
+                }
+                if (alpha_timer > 1) {
+                    alpha_timer--;
+                }
             }
-            bad_weather_sprite_dark.setAlpha(alpha_timer / 255f);
-            for (Sprite sprite : rainfall_list) {sprite.setAlpha(alpha_timer / 255f);}
-            if (alpha_timer > 1) {alpha_timer --;}
-        }
 
 //        Rain Animation
-        if ((timer_points%60) >= 10 && (timer_points%60) < 40) {
-            effectBatch.begin();
-            bad_weather_sprite_dark.draw(effectBatch);
-            for (Sprite sprite : rainfall_list) {
-                sprite.setX(sprite.getX() - 2);
-                sprite.setY(sprite.getY() - 6);
-                sprite.draw(effectBatch);
-                if (sprite.getY() < -640) {sprite.setY(1080);}
-                if (sprite.getX() < -640) {sprite.setX(1920 - (1.5f * 640));}
+            if ((timer_points % 60) >= 10 && (timer_points % 60) < 40) {
+                effectBatch.begin();
+                bad_weather_sprite_dark.draw(effectBatch);
+                for (Sprite sprite : rainfall_list) {
+                    sprite.setX(sprite.getX() - 2);
+                    sprite.setY(sprite.getY() - 6);
+                    sprite.draw(effectBatch);
+                    if (sprite.getY() < -640) {
+                        sprite.setY(1080);
+                    }
+                    if (sprite.getX() < -640) {
+                        sprite.setX(1920 - (1.5f * 640));
+                    }
+                }
+                effectBatch.end();
             }
-            effectBatch.end();
-        }
 
-        healthLabel.setText(String.valueOf(p.getHealth()));
-        dosh.setText(String.valueOf(p.getPlunder()));
-        ammo.setText(String.valueOf(p.getAmmo()));
-        if (p.isPoweredUp()){
-            if (!current_powup.isVisible()){ current_powup.setVisible(true); }
-            if (!bar_green.isVisible()){ bar_green.setVisible(true); }
-            bar_green.setSize(p.getComponent(PlayerController.class).getPowerupTimer()/2f, 16);
-            if (p.isInvincible()){current_powup.setDrawable(invincibility_drawable);}
-            if (p.isWeatherResistant()){current_powup.setDrawable(weather_res_drawable);}
-            if (p.isSpedUp()){current_powup.setDrawable(speedup_drawable);}
-        }
-        else{
-            current_powup.setVisible(false);
-            bar_green.setVisible(false);
-        }
-        points.setText(p.getPlunder() * 10 + timer_points);
-        if (!QuestManager.anyQuests()) {
-            parent.end.win();
-            parent.setScreen(parent.end);
-        } else {
-            Quest q = QuestManager.currentQuest();
+            healthLabel.setText(String.valueOf(p.getHealth()));
+            dosh.setText(String.valueOf(p.getComponent(Pirate.class).getCurrentPlunder()));
+            ammo.setText(String.valueOf(p.getAmmo()));
+            if (p.isPoweredUp()) {
+                if (!current_powup.isVisible()) {
+                    current_powup.setVisible(true);
+                }
+                if (!bar_green.isVisible()) {
+                    bar_green.setVisible(true);
+                }
+                bar_green.setSize(p.getComponent(PlayerController.class).getPowerupTimer() / 2f, 16);
+                if (p.isInvincible()) {
+                    current_powup.setDrawable(invincibility_drawable);
+                }
+                if (p.isWeatherResistant()) {
+                    current_powup.setDrawable(weather_res_drawable);
+                }
+                if (p.isSpedUp()) {
+                    current_powup.setDrawable(speedup_drawable);
+                }
+            } else {
+                current_powup.setVisible(false);
+                bar_green.setVisible(false);
+            }
+            points.setText(p.getPlunder() * 10 + timer_points);
+            if (!QuestManager.anyQuests()) {
+                parent.end.win();
+                parent.setScreen(parent.end);
+            } else {
+                Quest q = QuestManager.currentQuest();
             /*if(Objects.equals(prevQuest, "")) {
                 prevQuest = q.getDescription();
             }
@@ -340,9 +397,9 @@ public class GameScreen extends Page {
                 questComplete.setText("Quest Competed");
                 prevQuest = "";
             }*/
-            questName.setText(q.getName());
-            questDesc.setText(q.getDescription());
-        }
+                questName.setText(q.getName());
+                questDesc.setText(q.getDescription());
+            }
         /*if(!questComplete.getText().equals("")) {
             showTimer += EntityManager.getDeltaTime();
         }
@@ -350,6 +407,38 @@ public class GameScreen extends Page {
             showTimer = 0;
             questComplete.setText("");
         }*/
+        }
+        else if (shopOpen){
+            shopWindow.setSize(
+                    Gdx.graphics.getWidth() * 0.7f,
+                    Gdx.graphics.getHeight() * 0.7f);
+            shopWindow.setPosition(
+                    (Gdx.graphics.getWidth() - shopWindow.getWidth()) / 2f,
+                    (Gdx.graphics.getHeight() - shopWindow.getHeight()) /2f );
+            upgrades.setSize(shopWindow.getHeight() * 0.8f, shopWindow.getWidth() * 0.8f);
+            if (GameManager.getPlayer().getComponent(Pirate.class).getCurrentPlunder() < 50) {
+                for (TextButton b : shop_buttons) {
+                    b.setText("too poor :(");
+                    b.setTouchable(Touchable.disabled);
+                }
+            }
+            else{
+                for (TextButton b : shop_buttons) {
+                    b.setText("Buy!");
+                    b.setTouchable(Touchable.enabled);
+                }
+            }
+            shopWindow.setVisible(true);
+        }
+        else{ //paused
+            pauseScreen.setSize(
+                    Gdx.graphics.getWidth() * 0.7f,
+                    Gdx.graphics.getHeight() * 0.7f);
+            pauseScreen.setPosition(
+                    (Gdx.graphics.getWidth() - pauseScreen.getWidth()) / 2f,
+                    (Gdx.graphics.getHeight() - pauseScreen.getHeight()) /2f );
+            pauseScreen.setVisible(true);
+        }
     }
 
     /**
@@ -357,6 +446,11 @@ public class GameScreen extends Page {
      */
     @Override
     protected void CreateActors() {
+        ammo_upg_bar = new Image(ResourceManager.getSprite(ResourceManager.getId("upgrade_tier_bar.txt"), "tier-0"));
+        health_upg_bar = new Image(ResourceManager.getSprite(ResourceManager.getId("upgrade_tier_bar.txt"), "tier-0"));
+        speed_upg_bar = new Image(ResourceManager.getSprite(ResourceManager.getId("upgrade_tier_bar.txt"), "tier-0"));
+        damage_upg_bar = new Image(ResourceManager.getSprite(ResourceManager.getId("upgrade_tier_bar.txt"), "tier-0"));
+
         Table table = new Table();
         table.setFillParent(true);
         table.setDebug(false);
@@ -385,10 +479,164 @@ public class GameScreen extends Page {
         table.add(points).top().left().size(50);
         table.row();
         table.add(current_powup).top().left().center().size(1.25f * TILE_SIZE);
-        table.add(bar_green).top().left().size(1.25f * TILE_SIZE);
+        table.add(bar_green).top().left().bottom().size(
+                0f,
+                TILE_SIZE / 2f
+        );
+        table.row();
         table.top().left();
+        shopTable = new Table();
+        upgrades = new Table();
+        shopWindow = new Window("", parent.skin);
+        shopTable.add(new Label("Ye Olde Shoppe", parent.skin)).padBottom(10f).top().left();
+        shopTable.row();
+        shopWindow.setBackground(new TextureRegionDrawable(new Texture("shop_screen.png")));
+        upgrades.row();
+        upgrades.add(new Image(ResourceManager.getSprite(ResourceManager.getId("upgrades_powerups.txt"), "wrench"))).left().size(64f, 64f);
+        Table health_stack = new Table();
+        health_stack.row();
+        health_stack.add(tag_50()).left();
+        health_stack.add(new Label("Increase your ship's hull strength", parent.skin)).left();
+        health_stack.row();
+        health_stack.add(health_upg_bar).left().fillX().colspan(3);
+        upgrades.add(health_stack).left().fillX();
+        health_buy = new TextButton("Buy!", parent.skin);
+        health_buy.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                if (health_level < 3){
+                    health_level += 1;
+                    health_upg_bar.setDrawable(upgrade_bar_components[health_level]);
+                    Pirate p = GameManager.getPlayer().getComponent(Pirate.class);
+                    p.setMaxHealth(p.getMaxHealth() + 20);
+                    p.setHealth(p.getMaxHealth());
+                    healthLabel.setText(p.getHealth());
+                    p.spendPlunder(50);
+                    dosh.setText(p.getCurrentPlunder());
+                }
+            }
+        });
+        upgrades.add(health_buy).padLeft(5f);
+        upgrades.row();
+        upgrades.add(new Image(ResourceManager.getSprite(ResourceManager.getId("upgrades_powerups.txt"), "cannonball_pile"))).left().size(64f, 64f);
+        Table ammo_stack = new Table();
+        ammo_stack.row();
+        ammo_stack.add(tag_50()).left();
+        ammo_stack.add(new Label("Increase max cannonball capacity", parent.skin)).left();
+        ammo_stack.row();
+        ammo_stack.add(ammo_upg_bar).left().fillX().colspan(3);
+        upgrades.add(ammo_stack).left().fillX();;
+        ammo_buy = new TextButton("Buy!", parent.skin);
+        ammo_buy.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                if (ammo_level < 3) {
+                    ammo_level+= 1;
+                    ammo_upg_bar.setDrawable(upgrade_bar_components[ammo_level]);
+                    Pirate p = GameManager.getPlayer().getComponent(Pirate.class);
+                    p.setMaxAmmo(p.getMaxAmmo() + 20);
+                    p.setAmmo(p.getMaxAmmo());
+                    ammo.setText(p.getAmmo());
+                    p.spendPlunder(50);
+                    dosh.setText(p.getCurrentPlunder());
+                }
+            }
+        });
+        upgrades.add(ammo_buy).padLeft(5f);;
+        upgrades.row();
+        upgrades.add(new Image(ResourceManager.getSprite(ResourceManager.getId("upgrades_powerups.txt"), "explosion"))).left().size(64f, 64f);;
+        Table damage_stack = new Table();
+        damage_stack.row();
+        damage_stack.add(tag_50()).left();
+        damage_stack.add(new Label("Increase damage dealt by your cannonballs", parent.skin)).left();
+        damage_stack.row();
+        damage_stack.add(damage_upg_bar).left().fillX().colspan(3);
+        upgrades.add(damage_stack).left().fillX();;
+        damage_buy = new TextButton("Buy!", parent.skin);
+        damage_buy.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                damage_level = (damage_level + 1) % 4;
+                damage_upg_bar.setDrawable(upgrade_bar_components[damage_level]);
+            }
+        });
+        upgrades.add(damage_buy).padLeft(5f);
+        upgrades.row();
+        upgrades.add(new Image(ResourceManager.getSprite(ResourceManager.getId("upgrades_powerups.txt"), "beer_mug"))).left().size(64f, 64f);;
+        Table speed_stack = new Table();
+        speed_stack.row();
+        speed_stack.add(tag_50()).left();
+        speed_stack.add(new Label("Increase your ship's speed", parent.skin)).left();
+        speed_stack.row();
+        speed_stack.add(speed_upg_bar).left().fillX().colspan(3);
+        upgrades.add(speed_stack).left().fillX();
+        speed_buy = new TextButton("Buy!", parent.skin);
+        speed_buy.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                if (speed_level < 3){
+                    speed_level += 1;
+                    speed_upg_bar.setDrawable(upgrade_bar_components[speed_level]);
+                    PlayerController p = GameManager.getPlayer().getComponent(PlayerController.class);
+                    p.setSpeed(p.getSpeed() + 10f);
+                    GameManager.getPlayer().getComponent(Pirate.class).spendPlunder(50);
+                    dosh.setText(GameManager.getPlayer().getComponent(Pirate.class).getCurrentPlunder());
+                }
+            }
+        });
+        upgrades.add(speed_buy).padLeft(5f);;
+        upgrades.row();
+        upgrades.setFillParent(true);
+        shopTable.add(upgrades);
+        shopWindow.add(shopTable);
+        shopWindow.setVisible(false);
+
+        actors.add(shopWindow);
 
 
 
+        pauseScreen = new Window("", parent.skin);
+        Table pauseTable = new Table();
+        TextButton resume = new TextButton("Resume", parent.skin);
+        TextButton save = new TextButton("Save", parent.skin);
+        TextButton quit = new TextButton("main menu", parent.skin);
+        resume.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                paused = false;
+            }
+        });
+        quit.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                parent.setScreen(parent.menu);
+            }
+        });
+        Label pauseLabel = new Label("Pause", parent.skin);
+        pauseLabel.setFontScale(2f);
+        pauseTable.add(pauseLabel);
+        pauseTable.row();
+        pauseTable.add(resume).padBottom(10f);
+        pauseTable.row();
+        pauseTable.add(save).padBottom(10f);;
+        pauseTable.row();
+        pauseTable.add(quit);
+        pauseScreen.add(pauseTable);
+        pauseScreen.setBackground(new TextureRegionDrawable(new Texture("shop_screen.png")));
+        pauseScreen.setMovable(false);
+        actors.add(pauseScreen);
+        pauseScreen.setVisible(false);
+    }
+    /**
+     * Returns a price tag of 50 coins.
+     * */
+    protected Image tag_50(){
+        return new Image(ResourceManager.getSprite(ResourceManager.getId("upgrade_pricetags.txt"), "tag-50"));
+    }
+    /**
+     * Returns a price tag of 30 coins.
+     * */
+    protected Image tag_30(){
+        return new Image(ResourceManager.getSprite(ResourceManager.getId("upgrade_pricetags.txt"), "tag-30"));
     }
 }

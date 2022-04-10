@@ -25,6 +25,7 @@ public class PlayerController extends Component {
         powerupTimer = 0;
         type = ComponentType.PlayerController;
         setRequirements(ComponentType.RigidBody);
+
     }
 
     /**
@@ -158,5 +159,7 @@ public class PlayerController extends Component {
     }
 
     public int getPowerupTimer(){return powerupTimer;}
+    public void setSpeed(float newSpeed){speed = newSpeed;}
+    public float getSpeed(){return speed;}
 
 }
