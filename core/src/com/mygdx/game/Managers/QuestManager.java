@@ -9,6 +9,7 @@ import com.mygdx.game.Quests.LocateQuest;
 import com.mygdx.game.Quests.Quest;
 import com.mygdx.utils.Utilities;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -165,5 +166,9 @@ public class QuestManager {
     public static boolean anyQuests() {
         tryInit();
         return currentQuest() != null;
+    }
+
+    public static ArrayList<Quest> getAllQuests() {
+        return allQuests;
     }
 }

@@ -8,11 +8,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Components.*;
 import com.mygdx.game.Entitys.Player;
@@ -64,6 +67,7 @@ public class GameScreen extends Page {
     private TextureRegionDrawable[] upgrade_bar_components = new TextureRegionDrawable[] {upg_0, upg_1, upg_2, upg_3};
     private TextButton health_buy, ammo_buy, speed_buy, damage_buy;
     private TextButton [] shop_buttons = new TextButton[] {health_buy, ammo_buy, speed_buy, damage_buy};
+    private SaveManager s;
 
     /*private final Label questComplete;
     private float showTimer = 0;
@@ -604,6 +608,12 @@ public class GameScreen extends Page {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 paused = false;
+            }
+        });
+        save.addListener(new ChangeListener(){
+            @Override
+            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                s = new SaveManager(health_level, ammo_level, speed_level, damage_level, timer_points);
             }
         });
         quit.addListener(new ClickListener(){

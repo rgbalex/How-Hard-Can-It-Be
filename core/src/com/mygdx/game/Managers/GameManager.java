@@ -47,7 +47,6 @@ public final class GameManager {
         for (int i = 0; i < cacheSize; i++) {
             ballCache.add(new CannonBall());
         }
-
         for (JsonValue v : settings.get("factions")) {
             String name = v.getString("name");
             String col = v.getString("colour");
@@ -104,6 +103,7 @@ public final class GameManager {
     public static void CreatePlayer() {
         tryInit();
         Player p = new Player();
+        p.setPlayer();
         p.setFaction(1);
         p.getComponent(Pirate.class).takeDamage(10f);
         ships.add(p);
@@ -208,5 +208,13 @@ public final class GameManager {
         Random r = new Random();
         Vector2 pos = mapGraph.getWaterNodes().get(r.nextInt(mapGraph.getWaterCount()));
         return pos;
+    }
+
+    public static ArrayList<Faction> getFactions() {return factions;}
+    public static  ArrayList<Ship> getShips() {
+        return ships;
+    }
+    public static ArrayList<College> getColleges() {
+        return colleges;
     }
 }

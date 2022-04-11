@@ -63,4 +63,8 @@ public class Player extends Ship {
     public void setBadWeather(boolean weather) {badWeather = weather;}
 
     public boolean getBadWeather() {return badWeather;}
+
+    public void setPlayer() {
+        this.isPlayer = true;
+    }
 }

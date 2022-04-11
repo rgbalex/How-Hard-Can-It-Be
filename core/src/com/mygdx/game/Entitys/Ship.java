@@ -23,6 +23,7 @@ import java.util.Objects;
 public class Ship extends Entity implements CollisionCallBack {
     private static int shipCount = 0;
     public static ObjectMap<Vector2, String> shipDirections;
+    public boolean isPlayer = false;
 
     private final Vector2 currentDir;
 

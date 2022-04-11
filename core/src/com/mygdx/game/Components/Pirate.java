@@ -18,7 +18,7 @@ public class Pirate extends Component {
     protected boolean isAlive;
     private int health;
     private int ammo;
-    private final int attackDmg;
+    private int attackDmg;
     private int maxAmmo;
     private int maxHealth;
 

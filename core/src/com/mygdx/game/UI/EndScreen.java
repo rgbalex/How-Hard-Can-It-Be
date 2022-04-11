@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.mygdx.game.Components.Text;
 import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Managers.GameManager;
 import com.mygdx.game.Managers.ResourceManager;
@@ -51,6 +52,16 @@ public class EndScreen extends Page {
         t.row();
         playerStats = new Label("Player Stats:\n", parent.skin);
         t.add(playerStats).spaceBottom(space);
+        t.row();
+        TextButton replay = new TextButton("Save and Quit?", parent.skin);
+        replay.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+                System.exit(0);
+            }
+        });
+        t.add(replay).spaceBottom(3f);
         t.row();
         TextButton b = new TextButton("Exit", parent.skin);
         b.addListener(new ChangeListener() {
