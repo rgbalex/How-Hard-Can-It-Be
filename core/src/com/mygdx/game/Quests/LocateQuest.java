@@ -9,16 +9,12 @@ import static com.mygdx.utils.Constants.TILE_SIZE;
  * Competed once the player has gone to a specific position
  */
 public class LocateQuest extends Quest {
-    private final Vector2 loc;
-    private float radius;
 
     public LocateQuest() {
         super();
         name = "Find a chest";
         description = "North east";
         reward = 100;
-        loc = new Vector2();
-        radius = -1;
     }
 
     /**

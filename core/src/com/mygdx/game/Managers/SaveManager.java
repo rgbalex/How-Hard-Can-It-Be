@@ -58,24 +58,23 @@ public class SaveManager{
         }
         data.colleges = collegesData;
 
-//        data.quests = QuestManager.getAllQuests();
-        System.out.println(QuestManager.getAllQuests());
 //        Saving necessary data from quest entries as they themselves contain circular
 //        references that when JSON-ified do not play nicely.
         ArrayList<Quest> quests = QuestManager.getAllQuests();
         ArrayList<DataQuest> questData = new ArrayList<>();
         String type;
         for (Quest i : quests) {
-            if (((Object)i).getClass().getSimpleName() == "KillQuest") {
+            if (i.getClass().getSimpleName().equals("KillQuest")) {
                 type = "KillQuest";
-                DataQuest d = new DataQuest(type, (i.getName(), i.getDescription(), i.getReward(), i.isCompleted()), i.getTarget());
+                DataQuest d = new DataQuest(type, i.getName(), i.getDescription(), i.getReward(), i.isCompleted(), i.getTarget());
+                questData.add(d);
             } else {
                 type = "LocateQuest";
-//                DataQuest d = new DataQuest(type, i.getQuest, i.);
+                DataQuest d = new DataQuest(type, i.getName(), i.getDescription(), i.getReward(), i.isCompleted(), i.getLoc(), i.getRadius());
+                questData.add(d);
             }
-//            collegesData.add(d);
         }
-        data.colleges = collegesData;
+        data.quests = questData;
 
 
 //        Please note these will only save if non-zero
@@ -93,9 +92,8 @@ public class SaveManager{
 //        Data Handling
         Json jsonObject = new Json();
         String output = jsonObject.prettyPrint(data);
-//        System.out.println(output);
         String userprofile = System.getenv("USERPROFILE");
-        String fileLoc = userprofile + "\\Saved Games\\saved_data.json";
+        String fileLoc = userprofile + "\\saved_data.json";
         try (PrintWriter out = new PrintWriter(fileLoc)) {
             out.println(output);
         } catch (FileNotFoundException e) {

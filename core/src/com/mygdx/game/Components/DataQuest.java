@@ -5,25 +5,32 @@ import com.mygdx.game.Quests.Quest;
 
 public class DataQuest {
     public String type;
-    public Quest quest;
+    public String name;
+    public String description;
+    public int reward;
+    public boolean completed;
 //    LocQuest
-    public Vector2 loc;
-    public float radius;
+    public Vector2 loc = null;
+    public float radius = 0f;
 //    KillQuest
-    public Pirate target;
+    public Pirate target = null;
 
-    public DataQuest(String type, Quest quest, Vector2 loc, float radius) {
+    public DataQuest(String type, String name, String description, int reward, boolean completed, Pirate target) {
         this.type = type;
-        this.quest = quest;
+        this.name = name;
+        this.description = description;
+        this.reward = reward;
+        this.completed = completed;
+//        this.target = target;
+    }
+
+    public DataQuest(String type, String name, String description, int reward, boolean completed, Vector2 loc, float radius) {
+        this.type = type;
+        this.name = name;
+        this.description = description;
+        this.reward = reward;
+        this.completed = completed;
         this.loc = loc;
         this.radius = radius;
-        this.target = null;
-    }
-    public DataQuest(String type, Quest quest, Pirate target) {
-        this.type = type;
-        this.quest = quest;
-        this.loc = null;
-        this.radius = 0;
-        this.target = target;
     }
 }

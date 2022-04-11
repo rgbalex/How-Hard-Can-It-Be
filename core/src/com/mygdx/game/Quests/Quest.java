@@ -1,5 +1,7 @@
 package com.mygdx.game.Quests;
 
+import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Components.Pirate;
 import com.mygdx.game.Entitys.Player;
 
 /**
@@ -10,12 +12,18 @@ public abstract class Quest {
     protected String description;
     protected int reward;
     protected boolean isCompleted;
+    protected Pirate target;
+    protected Vector2 loc;
+    protected float radius;
 
     public Quest() {
         name = "";
         description = "";
         reward = 0;
         isCompleted = false;
+        target = null;
+        loc = new Vector2();
+        radius = -1f;
     }
 
     /**
@@ -41,5 +49,17 @@ public abstract class Quest {
 
     public String getDescription() {
         return description;
+    }
+
+    public Pirate getTarget() {
+        return target;
+    };
+
+    public Vector2 getLoc() {
+        return loc;
+    }
+
+    public float getRadius() {
+        return radius;
     }
 }

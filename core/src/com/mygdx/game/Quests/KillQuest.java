@@ -8,14 +8,12 @@ import com.mygdx.game.Entitys.Player;
  * A Quest to kill a college is only complete once that college is dead
  */
 public class KillQuest extends Quest {
-    private Pirate target;
 
     public KillQuest() {
         super();
         name = "Kill the college";
         description = "KILL KILL KILL";
         reward = 100;
-        target = null;
     }
 
     public KillQuest(Pirate target) {
@@ -32,5 +30,9 @@ public class KillQuest extends Quest {
     public boolean checkCompleted(Player p) {
         isCompleted = !target.isAlive();
         return isCompleted;
+    }
+
+    public Pirate getTarget() {
+        return target;
     }
 }

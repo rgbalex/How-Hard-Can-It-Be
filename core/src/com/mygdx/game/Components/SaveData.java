@@ -10,7 +10,7 @@ public class SaveData {
     public ArrayList<Faction> factions;
     public ArrayList<DataShip> ships;
     public ArrayList<DataCollege> colleges;
-    public ArrayList<Quest> quests;
+    public ArrayList<DataQuest> quests;
     public int health_level;
     public int ammo_level;
     public int speed_level;
