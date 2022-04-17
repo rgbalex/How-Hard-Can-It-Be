@@ -1,11 +1,13 @@
 package com.mygdx.game.Managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.mygdx.game.AI.TileMapGraph;
 import com.mygdx.game.Components.Pirate;
+import com.mygdx.game.Components.RigidBody;
 import com.mygdx.game.Components.Transform;
 import com.mygdx.game.Entitys.*;
 import com.mygdx.game.Faction;
@@ -24,7 +26,7 @@ public final class GameManager {
     private static ArrayList<Ship> ships;
     private static ArrayList<College> colleges;
 
-    private static final int cacheSize = 20;
+    private static final int cacheSize = 40;
     private static ArrayList<CannonBall> ballCache;
     private static int currentElement;
     private static Powerup [] powerups;
@@ -59,10 +61,9 @@ public final class GameManager {
     }
 
     /**
-     * called every fram checks id the quests are completed
+     * called every frame checks id the quests are completed
      */
     public static void update() {
-
         QuestManager.checkCompleted();
     }
 
@@ -88,11 +89,12 @@ public final class GameManager {
             CreateCollege(i + 1);
             for (int j = 0; j < cnt; j++) {
                 // prevents halifax from having shipcount + player
-                if (i == 0 && j > cnt - 2) {
+                if (i == 0 && j > cnt - 3) {
                     break;
                 }
                 NPCShip s = CreateNPCShip(i + 1);
                 s.getComponent(Transform.class).setPosition(getFaction(i + 1).getSpawnPos());
+                s.getComponent(RigidBody.class).setPosition(getFaction(i + 1).getSpawnPos());
             }
         }
     }

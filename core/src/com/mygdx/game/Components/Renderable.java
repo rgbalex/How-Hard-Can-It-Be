@@ -13,6 +13,7 @@ import com.mygdx.game.Managers.ResourceManager;
 public class Renderable extends Component {
     protected Sprite sprite;
     private boolean isVisible;
+    private Vector2 offset; // specifies the offset of this renderable from parent's rigid body (used for healthbars)
 
     /**
      * Called in other constructors, loads no textures by itself.
@@ -22,6 +23,7 @@ public class Renderable extends Component {
         isVisible = true;
         type = ComponentType.Renderable;
         sprite = new Sprite();
+        offset = new Vector2(0f, 0f);
         RenderingManager.addItem(this, RenderLayer.Transparent);
     }
 
@@ -55,20 +57,20 @@ public class Renderable extends Component {
      */
     @Override
     public void update() {
-        super.update();
-        if (sprite == null) {
-            return;
-        }
-        Transform c = parent.getComponent(Transform.class);
-        if (c == null) {
-            return;
-        }
-        Vector2 p = c.getPosition();
-        Vector2 s = c.getScale();
+            super.update();
+            if (sprite == null) {
+                return;
+            }
+            Transform c = parent.getComponent(Transform.class);
+            if (c == null) {
+                return;
+            }
+            Vector2 p = c.getPosition();
+            Vector2 s = c.getScale();
 
-        sprite.setPosition(p.x, p.y);
-        sprite.setRotation(MathUtils.radiansToDegrees * c.getRotation());
-        sprite.setScale(s.x, s.y);
+            sprite.setPosition(p.x + offset.x, p.y + offset.y);
+            sprite.setRotation(MathUtils.radiansToDegrees * c.getRotation());
+            sprite.setScale(s.x, s.y);
     }
 
     @Override
@@ -117,6 +119,13 @@ public class Renderable extends Component {
 
     public void toggleVisibility() {
         isVisible = !isVisible;
+    }
+
+    public void setSize(float w, float h){
+        sprite.setSize(w, h);
+    }
+    public void setOffset(float x, float y){
+        offset = new Vector2(x, y);
     }
 
 }

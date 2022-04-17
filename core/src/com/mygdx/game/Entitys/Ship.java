@@ -32,12 +32,7 @@ public class Ship extends Entity implements CollisionCallBack {
      */
     public Ship() {
         super(4);
-        if (this instanceof Player){
-            currentDir = new Vector2(0, 1); //fixes bug where if player didnt move before firing, the bullet would go in a random direction
-        }
-        else{
-            currentDir = new Vector2();
-        }
+        currentDir = new Vector2(0, 1); //fixes bug where if player didnt move before firing, the bullet would go in a random direction
         setName("Ship (" + shipCount++ + ")"); // each ship has a unique name
 
         if (shipDirections == null) {
@@ -55,10 +50,10 @@ public class Ship extends Entity implements CollisionCallBack {
         Transform t = new Transform();
         t.setPosition(800, 800);
         Renderable r = new Renderable(3, "white-up", RenderLayer.Transparent);
-        RigidBody rb = new RigidBody(PhysicsBodyType.Dynamic, r, t);
+        RigidBody rb = new RigidBody(PhysicsBodyType.Dynamic, r, t, false);
         rb.setCallback(this);
-
         Pirate p = new Pirate();
+
 
         // rb.setCallback(this);
 
@@ -85,6 +80,7 @@ public class Ship extends Entity implements CollisionCallBack {
     public void setFaction(int factionId) {
         getComponent(Pirate.class).setFactionId(factionId);
         setShipDirection("-up");
+        currentDir.set(0f, 1f);
     }
 
     /**
@@ -134,7 +130,6 @@ public class Ship extends Entity implements CollisionCallBack {
         try {
             r.setTexture(s);
         } catch (Exception ignored) {
-
         }
     }
 
@@ -153,6 +148,7 @@ public class Ship extends Entity implements CollisionCallBack {
     public void shoot() {
         getComponent(Pirate.class).shoot(currentDir);
     }
+    public Vector2 getShipDirection(){return currentDir;}
 
     /**
      * @return copy of the transform's position
@@ -163,7 +159,15 @@ public class Ship extends Entity implements CollisionCallBack {
 
     @Override
     public void BeginContact(CollisionInfo info) {
-
+        if (info.a instanceof CannonBall && this instanceof Player){ //cannonball hits player
+            CannonBall ball = (CannonBall) info.a;
+            if (ball.getShooter().getFactionId() != getFactionId()) { // enemy from different faction
+                ball.kill();
+                if(!(((Player) this).isInvincible())){ // accounting for powerups (see Powerup.java)
+                    getComponent(Pirate.class).takeDamage(10f);
+                }
+            } // if cannonball is shot by a friendly ship (same faction) it will travel through player
+        }
     }
 
     @Override
@@ -189,5 +193,8 @@ public class Ship extends Entity implements CollisionCallBack {
         if (this instanceof Player && !(info.b instanceof Player)) {
             ((CollisionCallBack) info.b).ExitTrigger(info);
         }
+    }
+    public int getFactionId(){
+        return getComponent(Pirate.class).getFaction().id;
     }
 }

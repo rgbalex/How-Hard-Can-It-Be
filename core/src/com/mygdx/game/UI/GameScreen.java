@@ -307,6 +307,7 @@ public class GameScreen extends Page {
     @Override
     protected void update() {
         if(!paused && !shopOpen) {
+            if (!(GameManager.getPlayer().isAlive())){parent.setScreen(parent.end);}
             shopWindow.setVisible(false);
             pauseScreen.setVisible(false);
             super.update();
@@ -560,8 +561,14 @@ public class GameScreen extends Page {
         damage_buy.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                damage_level = (damage_level + 1) % 4;
-                damage_upg_bar.setDrawable(upgrade_bar_components[damage_level]);
+                if (damage_level < 3) {
+                    damage_level+= 1;
+                    damage_upg_bar.setDrawable(upgrade_bar_components[damage_level]);
+                    Pirate p = GameManager.getPlayer().getComponent(Pirate.class);
+                    p.setAttackDmg(p.getDmg() + 20f);
+                    p.spendPlunder(50);
+                    dosh.setText(p.getCurrentPlunder());
+                }
             }
         });
         upgrades.add(damage_buy).padLeft(5f);

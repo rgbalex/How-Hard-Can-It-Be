@@ -1,12 +1,14 @@
 package com.mygdx.game.Entitys;
 
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.Components.Pirate;
 import com.mygdx.game.Components.Renderable;
 import com.mygdx.game.Components.RigidBody;
 import com.mygdx.game.Components.Transform;
 import com.mygdx.game.Managers.EntityManager;
 import com.mygdx.game.Managers.GameManager;
 import com.mygdx.game.Managers.RenderLayer;
+import com.mygdx.game.Managers.ResourceManager;
 import com.mygdx.game.Physics.CollisionCallBack;
 import com.mygdx.game.Physics.CollisionInfo;
 import com.mygdx.game.Physics.PhysicsBodyType;
@@ -19,8 +21,7 @@ import static com.mygdx.utils.Constants.TILE_SIZE;
 public class CannonBall extends Entity implements CollisionCallBack {
     private static float speed;
     private boolean toggleLife;
-    private static final int MAX_AGE = 5;
-    // private float age = 0;
+    private int life_remaining;
     private Ship shooter;
 
     public CannonBall() {
@@ -28,12 +29,12 @@ public class CannonBall extends Entity implements CollisionCallBack {
         setName("ball");
         toggleLife = false;
         Transform t = new Transform();
-        t.setPosition(-100, 100);
+        t.setPosition(10000, 10000);
         t.setScale(0.5f, 0.5f);
         Renderable r = new Renderable(4, "ball", RenderLayer.Transparent);
         RigidBody rb = new RigidBody(PhysicsBodyType.Dynamic, r, t, true);
         rb.setCallback(this);
-
+        life_remaining = (int) (5 / EntityManager.getDeltaTime()); // cannonballs remain active for max 3 seconds
         addComponents(t, r, rb);
         speed = GameManager.getSettings().get("starting").getFloat("cannonSpeed");
         r.hide();
@@ -41,6 +42,12 @@ public class CannonBall extends Entity implements CollisionCallBack {
 
     @Override
     public void update() {
+        if(life_remaining > 0){
+            life_remaining --;
+        }
+        else{
+            kill();
+        }
         super.update();
         removeOnCollision();
     }
@@ -49,7 +56,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
      * Removes the cannonball offscreen once it hits a target.
      */
     private void removeOnCollision() {
-        if (toggleLife) {
+        if (toggleLife || life_remaining == 0) {
             getComponent(Renderable.class).hide();
             Transform t = getComponent(Transform.class);
             t.setPosition(10000, 10000);
@@ -59,26 +66,19 @@ public class CannonBall extends Entity implements CollisionCallBack {
             rb.setVelocity(0, 0);
             toggleLife = false;
         }
-        /*else{
-            age += EntityManager.getDeltaTime();
-        }
-        if(age > MAX_AGE) {
-            age = 0;
-            kill();
-        }*/
     }
 
     /**
      * Teleport the cannonball in from offscreen and set in flying away from the ship.
      *
      * @param pos    2D vector location from where it sets off
-     * @param dir    2D vector direction for its movement
+     * @param dir    2D vector direction for its movement **NOT THE LOCATION OF THE TARGET**
      * @param sender ship entity firing it
      */
     public void fire(Vector2 pos, Vector2 dir, Ship sender) {
+        shooter = sender;
         Transform t = getComponent(Transform.class);
         t.setPosition(pos);
-
         RigidBody rb = getComponent(RigidBody.class);
         Vector2 ta = dir.cpy().scl(speed * EntityManager.getDeltaTime());
         Vector2 o = new Vector2(TILE_SIZE * t.getScale().x, TILE_SIZE * t.getScale().y);
@@ -87,6 +87,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
         rb.setVelocity(v);
 
         getComponent(Renderable.class).show();
+        life_remaining = (int) (5 / EntityManager.getDeltaTime());
         shooter = sender;
     }
 
@@ -94,7 +95,10 @@ public class CannonBall extends Entity implements CollisionCallBack {
      * Marks cannonball for removal on next update.
      */
     public void kill() {
-        toggleLife = false;
+        toggleLife = true;
+    }
+    public Vector2 getPosition(){
+        return getComponent(Transform.class).getPosition();
     }
 
     public Ship getShooter() {

@@ -25,7 +25,7 @@ public class Player extends Ship {
         super();
         poweredUp = false;
         PlayerController pc = new PlayerController(this, speed);
-        addComponent(pc);
+        addComponents(pc);
         setName("Player");
     }
 

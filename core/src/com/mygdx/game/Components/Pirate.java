@@ -1,10 +1,16 @@
 package com.mygdx.game.Components;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
+import com.mygdx.game.Entitys.NPCShip;
+import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Entitys.Ship;
 import com.mygdx.game.Faction;
 import com.mygdx.game.Managers.GameManager;
+import com.mygdx.game.Managers.RenderLayer;
+import com.mygdx.game.Managers.RenderingManager;
+import com.mygdx.game.Managers.ResourceManager;
 import com.mygdx.utils.QueueFIFO;
 
 /**
@@ -18,7 +24,7 @@ public class Pirate extends Component {
     protected boolean isAlive;
     private int health;
     private int ammo;
-    private int attackDmg;
+    private float attackDmg;
     private int maxAmmo;
     private int maxHealth;
 
@@ -43,6 +49,7 @@ public class Pirate extends Component {
         maxAmmo = ammo;
         maxHealth = health;
         currentPlunder = plunder;
+
     }
 
     public void addTarget(Ship target) {
@@ -96,7 +103,9 @@ public class Pirate extends Component {
         if (ammo == 0) {
             return;
         }
-        ammo--;
+        if (parent instanceof Player){
+            ammo--; // npc's get infinite ammo
+        }
         GameManager.shoot((Ship) parent, dir);
     }
 
@@ -123,7 +132,7 @@ public class Pirate extends Component {
             final Vector2 pos = p.getPosition();
             final float dst = pos.dst(targets.peek().getPosition());
             // withing attack range
-            return dst < Ship.getAttackRange();
+            return dst <= Ship.getAttackRange();
         }
         return false;
     }
@@ -188,5 +197,11 @@ public class Pirate extends Component {
 
     public void setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
+    }
+    public float getDmg(){
+        return attackDmg;
+    }
+    public void setAttackDmg(float dmg){
+        attackDmg = dmg;
     }
 }

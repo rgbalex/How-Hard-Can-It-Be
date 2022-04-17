@@ -102,7 +102,9 @@ public class Building extends Entity implements CollisionCallBack {
                     getComponent(Pirate.class).getFaction().getName())) {
                 return;
             }*/
-            destroy();
+            if (b.getShooter() instanceof Player){
+                destroy();
+            }
             ((CannonBall) info.a).kill();
         }
     }
