@@ -311,7 +311,7 @@ public class GameScreen extends Page {
     protected void update() {
         if(!paused && !shopOpen) {
             if(QuestManager.currentQuest() instanceof KillDuckQuest && !GameManager.getLongboi().isActive()){ // player is beginning the quest to kill longboi
-                GameManager.getLongboi().place(1200, 600);
+                GameManager.getLongboi().place(1200, 1500);
             }
             if (!(GameManager.getPlayer().isAlive())){parent.setScreen(parent.end);}
             shopWindow.setVisible(false);
