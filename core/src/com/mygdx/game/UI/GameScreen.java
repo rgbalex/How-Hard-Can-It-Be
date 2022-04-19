@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -21,7 +22,9 @@ import com.mygdx.game.Components.*;
 import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Managers.*;
 import com.mygdx.game.PirateGame;
+import com.mygdx.game.Quests.KillDuckQuest;
 import com.mygdx.game.Quests.Quest;
+import com.mygdx.utils.Constants;
 
 import static com.mygdx.utils.Constants.*;
 
@@ -307,6 +310,9 @@ public class GameScreen extends Page {
     @Override
     protected void update() {
         if(!paused && !shopOpen) {
+            if(QuestManager.currentQuest() instanceof KillDuckQuest && !GameManager.getLongboi().isActive()){ // player is beginning the quest to kill longboi
+                GameManager.getLongboi().place(1200, 600);
+            }
             if (!(GameManager.getPlayer().isAlive())){parent.setScreen(parent.end);}
             shopWindow.setVisible(false);
             pauseScreen.setVisible(false);

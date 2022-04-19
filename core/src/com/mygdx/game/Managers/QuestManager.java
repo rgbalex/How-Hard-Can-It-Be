@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Entitys.Chest;
 import com.mygdx.game.Entitys.College;
 import com.mygdx.game.Entitys.Player;
+import com.mygdx.game.Quests.KillDuckQuest;
 import com.mygdx.game.Quests.KillQuest;
 import com.mygdx.game.Quests.LocateQuest;
 import com.mygdx.game.Quests.Quest;
@@ -29,6 +30,7 @@ public class QuestManager {
         chest = new Chest();
 
         createRandomQuests();
+        allQuests.add(1, new KillDuckQuest()); // after doing a couple of quests, the player is tasked with killing longboi
     }
 
     /**

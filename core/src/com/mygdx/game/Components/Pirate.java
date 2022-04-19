@@ -106,7 +106,7 @@ public class Pirate extends Component {
         if (parent instanceof Player){
             ammo--; // npc's get infinite ammo
         }
-        GameManager.shoot((Ship) parent, dir);
+        GameManager.shoot(parent, dir);
     }
 
     /**

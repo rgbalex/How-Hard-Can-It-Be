@@ -31,7 +31,7 @@ public final class GameManager {
     private static int currentElement;
     private static Powerup [] powerups;
     private static JsonValue settings;
-
+    private static DuckMonster longboi;
     private static TileMapGraph mapGraph;
 
     /**
@@ -97,6 +97,8 @@ public final class GameManager {
                 s.getComponent(RigidBody.class).setPosition(getFaction(i + 1).getSpawnPos());
             }
         }
+        longboi = new DuckMonster();
+
     }
 
     /**
@@ -177,13 +179,16 @@ public final class GameManager {
         return colleges.get(factionId - 1);
     }
 
+    public static DuckMonster getLongboi(){
+        return longboi;
+    }
     /**
      * Utilises the cached cannonballs to fire one
      *
      * @param p   parent
      * @param dir shoot direction
      */
-    public static void shoot(Ship p, Vector2 dir) {
+    public static void shoot(Entity p, Vector2 dir) {
         Vector2 pos = p.getComponent(Transform.class).getPosition().cpy();
         //pos.add(dir.x * TILE_SIZE * 0.5f, dir.y * TILE_SIZE * 0.5f);
         ballCache.get(currentElement++).fire(pos, dir, p);

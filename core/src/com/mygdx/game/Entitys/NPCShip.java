@@ -213,7 +213,7 @@ public class NPCShip extends Ship implements CollisionCallBack {
         if(!(info.fB.isSensor())) { // prevents bullets from registering collisions upon entering ship's 'agro' range
             if (info.a instanceof CannonBall && ((CannonBall) info.a).getShooter() instanceof Player && !isAlly()) { // shot by player and hit the npc ship of an enemy faction
                 CannonBall ball = ((CannonBall) info.a);
-                Ship shooter = ball.getShooter();
+                Ship shooter = (Ship) ball.getShooter();
                 ball.kill();
                 if(getHealth() <= shooter.getComponent(Pirate.class).getDmg() && getHealth() > 0){ // will die from this shot and has not died yet
                     getComponent(Pirate.class).takeDamage(shooter.getComponent(Pirate.class).getDmg());
@@ -225,9 +225,9 @@ public class NPCShip extends Ship implements CollisionCallBack {
                     getComponent(Pirate.class).takeDamage(shooter.getComponent(Pirate.class).getDmg());
                 }
             }
-            else if ((info.a instanceof CannonBall && ((CannonBall) info.a).getShooter().getFactionId() != getFactionId()) && (isAlly())) {
+            else if ((info.a instanceof CannonBall && ((CannonBall) info.a).getShooter() instanceof Ship && ((Ship)((CannonBall) info.a).getShooter()).getFactionId() != getFactionId()) && (isAlly())) {
                 CannonBall ball = ((CannonBall) info.a);
-                Ship shooter = ball.getShooter();
+                Ship shooter = (Ship) ball.getShooter();
                 getComponent(Pirate.class).takeDamage(shooter.getComponent(Pirate.class).getDmg());
                 ball.kill();
                 getComponent(Pirate.class).addTarget(shooter);

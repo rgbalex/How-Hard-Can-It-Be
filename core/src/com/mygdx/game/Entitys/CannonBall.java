@@ -22,7 +22,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
     private static float speed;
     private boolean toggleLife;
     private int life_remaining;
-    private Ship shooter;
+    private Entity shooter;
 
     public CannonBall() {
         super(3);
@@ -34,7 +34,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
         Renderable r = new Renderable(4, "ball", RenderLayer.Transparent);
         RigidBody rb = new RigidBody(PhysicsBodyType.Dynamic, r, t, true);
         rb.setCallback(this);
-        life_remaining = (int) (5 / EntityManager.getDeltaTime()); // cannonballs remain active for max 3 seconds
+        life_remaining = (int) (7 / EntityManager.getDeltaTime()); // cannonballs remain active for max 7 seconds (otherwise it is hard to hit buildings deep into islands)
         addComponents(t, r, rb);
         speed = GameManager.getSettings().get("starting").getFloat("cannonSpeed");
         r.hide();
@@ -47,6 +47,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
         }
         else{
             kill();
+            getComponent(Renderable.class).setTexture(ResourceManager.getSprite(4, "ball")); // reset to default skin once removed
         }
         super.update();
         removeOnCollision();
@@ -75,8 +76,14 @@ public class CannonBall extends Entity implements CollisionCallBack {
      * @param dir    2D vector direction for its movement **NOT THE LOCATION OF THE TARGET**
      * @param sender ship entity firing it
      */
-    public void fire(Vector2 pos, Vector2 dir, Ship sender) {
+    public void fire(Vector2 pos, Vector2 dir, Entity sender) {
         shooter = sender;
+        if (sender instanceof DuckMonster){
+            getComponent(Renderable.class).setTexture(ResourceManager.getSprite(ResourceManager.getId("Eggball.txt"), "egg"));
+        }
+        else{
+            getComponent(Renderable.class).setTexture(ResourceManager.getSprite(4, "ball"));
+        }
         Transform t = getComponent(Transform.class);
         t.setPosition(pos);
         RigidBody rb = getComponent(RigidBody.class);
@@ -87,7 +94,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
         rb.setVelocity(v);
 
         getComponent(Renderable.class).show();
-        life_remaining = (int) (5 / EntityManager.getDeltaTime());
+        life_remaining = (int) (7 / EntityManager.getDeltaTime());
         shooter = sender;
     }
 
@@ -101,7 +108,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
         return getComponent(Transform.class).getPosition();
     }
 
-    public Ship getShooter() {
+    public Entity getShooter() {
         return shooter;
     }
 
