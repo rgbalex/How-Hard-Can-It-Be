@@ -1,6 +1,7 @@
 package com.mygdx.game.Entitys;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.mygdx.game.Components.Pirate;
 import com.mygdx.game.Components.Transform;
@@ -101,5 +102,9 @@ public class College extends Entity {
     public void update() {
         super.update();
         isAlive();
+    }
+
+    public ArrayList<Building> getBuildings() {
+        return buildings;
     }
 }

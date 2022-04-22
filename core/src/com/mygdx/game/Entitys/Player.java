@@ -67,4 +67,9 @@ public class Player extends Ship {
     public void setPlayer() {
         this.isPlayer = true;
     }
+
+    public void setHealth(int health) {getComponent(Pirate.class).setHealth(health);}
+    public void setPlunder(int plunder) {getComponent(Pirate.class).setPlunder(plunder);}
+    public void setCannonBalls(int cannonBalls) {getComponent(Pirate.class).setAmmo(cannonBalls);}
+
 }

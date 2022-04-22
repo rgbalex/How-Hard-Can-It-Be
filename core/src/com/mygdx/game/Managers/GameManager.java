@@ -3,6 +3,7 @@ package com.mygdx.game.Managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.mygdx.game.AI.TileMapGraph;
@@ -11,10 +12,14 @@ import com.mygdx.game.Components.RigidBody;
 import com.mygdx.game.Components.Transform;
 import com.mygdx.game.Entitys.*;
 import com.mygdx.game.Faction;
+import com.mygdx.game.Quests.KillDuckQuest;
+import com.mygdx.game.Quests.KillQuest;
+import com.mygdx.game.Quests.LocateQuest;
 import com.mygdx.utils.QueueFIFO;
 import com.mygdx.utils.Utilities;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -59,6 +64,133 @@ public final class GameManager {
             factions.add(new Faction(name, col, pos, spawn, factions.size() + 1));
         }
     }
+
+    public static void load_game(JsonValue _factions, JsonValue _ships, JsonValue _colleges, JsonValue _quests, JsonValue base) {
+
+        factions.clear();
+        factions = new ArrayList<>();
+
+        Player p = GameManager.getPlayer();
+
+        for (Ship s : ships) {
+            s.getComponent(Pirate.class).setHealth(0);
+            s.setDead();
+            s.update();
+        }
+        ships.clear();
+        ships = new ArrayList<>();
+
+//        ballCache = new ArrayList<>(cacheSize);
+
+
+        for (College c : colleges) {
+            for (Building b : c.getBuildings()) {
+                b.hide();
+            }
+        }
+        colleges.clear();
+        colleges = new ArrayList<>();
+        powerups = new Powerup[50];
+
+        System.gc();
+//        for (int i = 0; i < cacheSize; i++) {
+//            ballCache.add(new CannonBall());
+//        }
+
+//        Load Factions
+        for (JsonValue faction : _factions) {
+            String name = faction.getString("name");
+            String col = faction.getString("shipColour");
+            Vector2 pos = new Vector2(faction.get("position").getFloat("x"), faction.get("position").getFloat("y"));
+            Vector2 spawn = new Vector2(faction.get("spawnPos").getFloat("x"), faction.get("spawnPos").getFloat("y"));
+            factions.add(new Faction(name, col, pos, spawn, factions.size() + 1));
+        }
+
+
+//        Create player
+        p.setPlayer();
+        p.setFaction(1);
+        try {
+            p.setPlunder(base.getInt("plunder"));
+        } catch (IllegalArgumentException e) {
+            p.setPlunder(0);
+        }
+        p.setHealth(base.getInt("health"));
+        try {
+            p.setCannonBalls(base.getInt("cannon_balls"));
+        } catch (IllegalArgumentException e) {
+            p.setCannonBalls(0);
+        }
+        ships.add(p);
+
+//        Create ships from load
+        int counter = 0;
+        for (JsonValue ship : _ships) {
+            if (counter != 0) {
+                NPCShip s = CreateNPCShip(ship.getInt("faction") + 1);
+                s.getComponent(Transform.class).setPosition(new Vector2(ship.get("position").getInt("x"), ship.get("position").getInt("y")));
+                s.getComponent(RigidBody.class).setPosition(new Vector2(ship.get("position").getInt("x"), ship.get("position").getInt("y")));
+            }
+            counter ++;
+        }
+
+//        System.out.println(_factions);
+//        System.out.println("\n\n\n\n");
+//        for (Faction f : factions) {
+//            System.out.println(f.getName());
+//        }
+
+        for (JsonValue j : _colleges) {
+            if (!j.getBoolean("destroyed")) {
+                CreateCollege(j.getInt("factionID") + 1);
+            } else if (j.getInt("factionID") == 0) {
+                CreateCollege(j.getInt("factionID") + 1);
+            }
+        }
+
+//        To stop update() from marking the game as complete when clearing all quests.
+        QuestManager.toggleLoading(true);
+        QuestManager.clearAllQuests();
+//        Create quests on load
+        for (JsonValue j : _quests) {
+            if (j.getBoolean("completed")) {
+                assert true;
+            }
+            else {
+                if (Objects.equals(j.getString("type"), "KillQuest")) {
+                    counter = 0;
+                    KillQuest q = null;
+                    for (Faction f : factions) {
+                        try {
+                            if (Objects.equals(j.getString("description"), f.getName())) {
+                                College enemy = GameManager.getCollege(counter + 1);
+                                q = new KillQuest(enemy);
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            assert true;
+                        }
+                        counter++;
+                    }
+                    if (!(q == null)) {
+                        QuestManager.addQuest(q);
+                    } else {
+                        System.out.println("KillQuest with null target found.");
+                    }
+                } else if (Objects.equals(j.getString("type"), "LocateQuest")) {
+                    LocateQuest q = QuestManager.rndLocateQuestReturnable();
+                    QuestManager.addQuest(q);
+                } else if (Objects.equals(j.getString("type"), "KillDuckQuest")) {
+                    KillDuckQuest q = new KillDuckQuest();
+                    QuestManager.addQuest(q);
+                } else {
+                    System.out.println("Unspecified Error - Loading Quests has Broken");
+                }
+            }
+        }
+        QuestManager.removePlaceholderQuest();
+        QuestManager.toggleLoading(false);
+    }
+
 
     /**
      * called every frame checks id the quests are completed

@@ -79,6 +79,7 @@ public abstract class Component {
      */
     public void cleanUp() {
         checkRequirements();
+        
     }
 
     /**

@@ -197,4 +197,8 @@ public class Ship extends Entity implements CollisionCallBack {
     public int getFactionId(){
         return getComponent(Pirate.class).getFaction().id;
     }
+
+    public void setDead() {
+        getComponent(Pirate.class).setAlive(false);
+    }
 }

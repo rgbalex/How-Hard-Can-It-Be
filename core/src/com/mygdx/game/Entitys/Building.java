@@ -113,4 +113,16 @@ public class Building extends Entity implements CollisionCallBack {
     public void ExitTrigger(CollisionInfo info) {
 
     }
+
+    public void hide() {
+        for (Renderable r : getComponents(Renderable.class)){
+            r.hide();
+        }
+        Transform t = getComponent(Transform.class);
+        t.setPosition(100000, 100000);
+
+        RigidBody rb = getComponent(RigidBody.class);
+        rb.setPosition(t.getPosition());
+        rb.setVelocity(0, 0);
+    }
 }

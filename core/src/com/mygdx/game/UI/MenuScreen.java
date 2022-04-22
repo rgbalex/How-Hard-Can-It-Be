@@ -9,8 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.SerializationException;
+import com.mygdx.game.Managers.GameManager;
 import com.mygdx.game.Managers.ResourceManager;
 import com.mygdx.game.PirateGame;
+
+import java.io.InputStream;
 
 import static com.mygdx.utils.Constants.VIEWPORT_HEIGHT;
 
@@ -30,7 +36,7 @@ public class MenuScreen extends Page {
         Table t = new Table();
         t.setFillParent(true);
 
-        float space = VIEWPORT_HEIGHT * 0.25f;
+        float space = VIEWPORT_HEIGHT * 0.125f;
 
         t.setBackground(new TextureRegionDrawable(ResourceManager.getTexture("menuBG.jpg")));
         Label l = new Label("Pirates the movie the game", parent.skin);
@@ -46,6 +52,37 @@ public class MenuScreen extends Page {
             }
         });
         t.add(play).top().size(100, 25).spaceBottom(space);
+        t.row();
+
+        TextButton loadData = new TextButton("Load Game", parent.skin);
+        loadData.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Loading Data...");
+//                Loading JSON to working memory
+                String userprofile = System.getenv("USERPROFILE");
+                String fileLoc = userprofile + "\\saved_data.json";
+
+                JsonReader json = new JsonReader();
+                try {
+                    JsonValue base = json.parse(Gdx.files.internal(fileLoc));
+                    JsonValue factions = base.get("factions");
+                    JsonValue ships = base.get("ships");
+                    JsonValue colleges = base.get("colleges");
+                    JsonValue quests = base.get("quests");
+//                Set the loaded flag to true and pass these variables to the game
+                    GameManager.load_game(factions, ships, colleges, quests, base);
+//                Do all the loading before this point.
+                    System.out.println("Load Complete.");
+                    parent.setScreen(parent.game);
+                } catch (SerializationException e) {
+                    System.out.println("The System Cannot find the File Specified.");
+                    System.out.println(e);
+                    loadData.setText("No Save File");
+                }
+            }
+        });
+        t.add(loadData).top().size(100, 25).spaceBottom(space);
         t.row();
 
         TextButton difficulty = new TextButton("nOOB", parent.skin);

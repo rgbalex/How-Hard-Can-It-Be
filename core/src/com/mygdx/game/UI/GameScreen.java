@@ -396,7 +396,7 @@ public class GameScreen extends Page {
                 bar_green.setVisible(false);
             }
             points.setText(p.getPlunder() * 10 + timer_points);
-            if (!QuestManager.anyQuests()) {
+            if (!QuestManager.anyQuests() && !QuestManager.loading) {
                 parent.end.win();
                 parent.setScreen(parent.end);
             } else {
@@ -616,7 +616,7 @@ public class GameScreen extends Page {
         Table pauseTable = new Table();
         TextButton resume = new TextButton("Resume", parent.skin);
         TextButton save = new TextButton("Save", parent.skin);
-        TextButton quit = new TextButton("main menu", parent.skin);
+//        TextButton quit = new TextButton("main menu", parent.skin);
         resume.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -629,12 +629,13 @@ public class GameScreen extends Page {
                 s = new SaveManager(health_level, ammo_level, speed_level, damage_level, timer_points);
             }
         });
-        quit.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y){
-                parent.setScreen(parent.menu);
-            }
-        });
+//        quit.addListener(new ClickListener(){
+//            @Override
+//            public void clicked(InputEvent event, float x, float y){
+//                parent.setScreen(parent.menu);
+//                paused = false;
+//            }
+//        });
         Label pauseLabel = new Label("Pause", parent.skin);
         pauseLabel.setFontScale(2f);
         pauseTable.add(pauseLabel);
@@ -643,7 +644,7 @@ public class GameScreen extends Page {
         pauseTable.row();
         pauseTable.add(save).padBottom(10f);;
         pauseTable.row();
-        pauseTable.add(quit);
+//        pauseTable.add(quit);
         pauseScreen.add(pauseTable);
         pauseScreen.setBackground(new TextureRegionDrawable(new Texture("shop_screen.png")));
         pauseScreen.setMovable(false);

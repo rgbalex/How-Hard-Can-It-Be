@@ -10,7 +10,6 @@ import com.mygdx.game.Quests.LocateQuest;
 import com.mygdx.game.Quests.Quest;
 import com.mygdx.utils.Utilities;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,6 +19,7 @@ import static com.mygdx.utils.Constants.TILE_SIZE;
  * Creates the quests and manages their completion and order
  */
 public class QuestManager {
+    public static boolean loading = false;
     private static boolean initialized = false;
     private static ArrayList<Quest> allQuests;
     private static Chest chest;
@@ -82,6 +82,29 @@ public class QuestManager {
         addQuest(new LocateQuest(new Vector2(x, y), 5 * TILE_SIZE));
     }
 
+
+    public static LocateQuest rndLocateQuestReturnable() {
+        final ArrayList<Float> locations = new ArrayList<>();
+        for (float f : GameManager.getSettings().get("quests").get("locations").asFloatArray()) {
+            locations.add(f);
+        }
+        // in game settings the positions are stored as ints with y following x it doesnt wrap
+        // eg. a, b, c, d
+        // v1: (a, b) v2: (c, d)
+        Integer choice = -1;
+        float x = Utilities.randomChoice(locations, choice);
+        float y;
+        assert (choice > -1);
+        if (choice == locations.size() - 1) {
+            y = x;
+            x = locations.get(choice - 1);
+        } else {
+            y = locations.get(choice + 1);
+        }
+        x *= TILE_SIZE;
+        y *= TILE_SIZE;
+        return new LocateQuest(new Vector2(x, y), 5 * TILE_SIZE);
+    }
     /**
      * 50/50 chance of kill quest or locate quest
      *
@@ -172,5 +195,19 @@ public class QuestManager {
 
     public static ArrayList<Quest> getAllQuests() {
         return allQuests;
+    }
+
+    public static void clearAllQuests() {
+        allQuests = new ArrayList<>();
+        KillDuckQuest q = new KillDuckQuest();
+        QuestManager.addQuest(q);
+    }
+
+    public static void toggleLoading(boolean state) {
+        loading = state;
+    }
+
+    public static void removePlaceholderQuest() {
+        allQuests.remove(0);
     }
 }

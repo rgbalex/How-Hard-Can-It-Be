@@ -204,4 +204,13 @@ public class Pirate extends Component {
     public void setAttackDmg(float dmg){
         attackDmg = dmg;
     }
+    public void setPlunder(int plunder) {
+        this.plunder = plunder;
+    }
+
+    public void setAlive(boolean b) {
+        if (!b) {
+            kill();
+        }
+    }
 }

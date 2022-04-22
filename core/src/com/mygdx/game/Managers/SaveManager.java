@@ -1,6 +1,7 @@
 package com.mygdx.game.Managers;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.mygdx.game.Components.*;
 import com.mygdx.game.Entitys.College;
@@ -18,6 +19,7 @@ public class SaveManager{
         SaveData data = new SaveData();
         Player p = GameManager.getPlayer();
         data.factions = GameManager.getFactions();
+        ArrayList<String> FactionLUT = new ArrayList<>();
 
 //        Saving necessary data from ship entities as they themselves contain circular
 //        references that when JSON-ified do not play nicely.
@@ -27,6 +29,8 @@ public class SaveManager{
             String jsonFactionID = "Error";
             int counter = 0;
             for (Faction f : data.factions) {
+                FactionLUT.add(counter, f.getName());
+
                 if (i.getComponent(Pirate.class).getFaction().getName() == f.getName()) {
                     jsonFactionID = String.valueOf(counter);
                 } else {
@@ -53,27 +57,38 @@ public class SaveManager{
                     counter ++;
                 }
             }
-            DataCollege d = new DataCollege(jsonFactionID);
+            DataCollege d = new DataCollege(jsonFactionID, false);
             collegesData.add(d);
         }
-        data.colleges = collegesData;
 
 //        Saving necessary data from quest entries as they themselves contain circular
-//        references that when JSON-ified do not play nicely.
+//        references that when JSONified do not play nicely.
         ArrayList<Quest> quests = QuestManager.getAllQuests();
         ArrayList<DataQuest> questData = new ArrayList<>();
         String type;
         for (Quest i : quests) {
             if (i.getClass().getSimpleName().equals("KillQuest")) {
+//                This is the checker for college destruction.
+                for (DataCollege j : collegesData){
+                    if (i.getDescription() == FactionLUT.get(Integer.parseInt(j.factionID))) {
+                        j.destroyed = i.isCompleted();
+                    }
+                }
                 type = "KillQuest";
                 DataQuest d = new DataQuest(type, i.getName(), i.getDescription(), i.getReward(), i.isCompleted(), i.getTarget());
                 questData.add(d);
-            } else {
+            } else if (i.getClass().getSimpleName().equals("LocateQuest")) {
                 type = "LocateQuest";
                 DataQuest d = new DataQuest(type, i.getName(), i.getDescription(), i.getReward(), i.isCompleted(), i.getLoc(), i.getRadius());
                 questData.add(d);
+            } else {
+                type = "KillDuckQuest";
+                DataQuest d = new DataQuest(type, i.getName(), i.getDescription(), i.getReward(), i.isCompleted(), i.getTarget());
+                questData.add(d);
             }
         }
+//        This has been moved to here so edits above also get moved into json file.
+        data.colleges = collegesData;
         data.quests = questData;
 
 
