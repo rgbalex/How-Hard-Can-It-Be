@@ -44,6 +44,7 @@ public class PirateGame extends Game {
         ResourceManager.addTextureAtlas("longboi_moveset.txt");
         ResourceManager.addTextureAtlas("Eggball.txt");
         ResourceManager.addTexture("poison.png");
+        ResourceManager.addTexture("arrow.png");
         ResourceManager.loadAssets();
         // cant load any more resources after this point (just functionally I choose not to implement)
         stage = new Stage(new ScreenViewport());

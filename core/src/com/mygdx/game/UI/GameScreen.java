@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Components.*;
 import com.mygdx.game.Entitys.Player;
+import com.mygdx.game.Entitys.Ship;
 import com.mygdx.game.Managers.*;
 import com.mygdx.game.PirateGame;
 import com.mygdx.game.Quests.KillDuckQuest;
@@ -71,6 +72,8 @@ public class GameScreen extends Page {
     private TextButton health_buy, ammo_buy, speed_buy, damage_buy;
     private TextButton [] shop_buttons = new TextButton[] {health_buy, ammo_buy, speed_buy, damage_buy};
     private SaveManager s;
+    private Container<Table> shopContainer;
+    private TextButton openShop;
 
     /*private final Label questComplete;
     private float showTimer = 0;
@@ -101,6 +104,7 @@ public class GameScreen extends Page {
         //QuestManager.addQuest(new KillQuest(c));
 
         EntityManager.raiseEvents(ComponentEvent.Awake, ComponentEvent.Start);
+
 
         Window questWindow = new Window("Current Quest", parent.skin);
         questWindow.setMovable(false);
@@ -242,13 +246,11 @@ public class GameScreen extends Page {
      */
     @Override
     public void render(float delta) {
-        if ((Gdx.input.isKeyJustPressed(Input.Keys.P)) && !paused){
-            shopOpen = !shopOpen;
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             paused = !paused;
         }
         if(!paused && !shopOpen) {
+            openShop.setVisible(true);
             ScreenUtils.clear(BACKGROUND_COLOUR.x, BACKGROUND_COLOUR.y, BACKGROUND_COLOUR.z, 1);
             EntityManager.raiseEvents(ComponentEvent.Update);
             EntityManager.raiseEvents(ComponentEvent.Render);
@@ -310,6 +312,20 @@ public class GameScreen extends Page {
     @Override
     protected void update() {
         if(!paused && !shopOpen) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                int x = Gdx.input.getX();
+                int y = Gdx.input.getY();
+                if (!openShop.isPressed()) {
+
+                    // in range 0 to VIEWPORT 0, 0 bottom left
+                    Vector2 delta = new Vector2(x, y);
+                    delta.sub(HALF_DIMENSIONS); // center 0, 0
+                    delta.nor();
+                    delta.y *= -1;
+                    // unit dir to fire
+                    GameManager.getPlayer().shoot(delta);
+                }
+            }
             if(QuestManager.currentQuest() instanceof KillDuckQuest && !GameManager.getLongboi().isActive()){ // player is beginning the quest to kill longboi
                 GameManager.getLongboi().place(1200, 1500);
             }
@@ -420,13 +436,10 @@ public class GameScreen extends Page {
         }*/
         }
         else if (shopOpen){
-            shopWindow.setSize(
-                    Gdx.graphics.getWidth() * 0.7f,
-                    Gdx.graphics.getHeight() * 0.7f);
+            shopWindow.setSize(shopContainer.getWidth() * 1.5f, shopContainer.getHeight() * 1.5f);
             shopWindow.setPosition(
                     (Gdx.graphics.getWidth() - shopWindow.getWidth()) / 2f,
                     (Gdx.graphics.getHeight() - shopWindow.getHeight()) /2f );
-            upgrades.setSize(shopWindow.getHeight() * 0.8f, shopWindow.getWidth() * 0.8f);
             if (GameManager.getPlayer().getComponent(Pirate.class).getCurrentPlunder() < 50) {
                 for (TextButton b : shop_buttons) {
                     b.setText("too poor :(");
@@ -449,6 +462,7 @@ public class GameScreen extends Page {
                     (Gdx.graphics.getWidth() - pauseScreen.getWidth()) / 2f,
                     (Gdx.graphics.getHeight() - pauseScreen.getHeight()) /2f );
             pauseScreen.setVisible(true);
+            openShop.setVisible(false);
         }
     }
 
@@ -495,11 +509,29 @@ public class GameScreen extends Page {
                 TILE_SIZE / 2f
         );
         table.row();
+        openShop = new TextButton("Open shop", parent.skin);
+        openShop.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                if(openShop.getText().toString().equals("Open shop")){
+                    shopOpen = true;
+                    openShop.setText("Exit shop");
+                }
+                else{
+                    shopOpen = false;
+                    openShop.setText("Open shop");
+                }
+            }
+        });
+        table.add(openShop).colspan(2);
+        openShop.setVisible(true);
         table.top().left();
         shopTable = new Table();
         upgrades = new Table();
         shopWindow = new Window("", parent.skin);
-        shopTable.add(new Label("Ye Olde Shoppe", parent.skin)).padBottom(10f).top().left();
+        Label title = new Label("Ye Olde Shoppe", parent.skin);
+        title.setFontScale(2f);
+        shopTable.add(title).padBottom(20f).top().left();
         shopTable.row();
         shopWindow.setBackground(new TextureRegionDrawable(new Texture("shop_screen.png")));
         upgrades.row();
@@ -533,7 +565,7 @@ public class GameScreen extends Page {
         Table ammo_stack = new Table();
         ammo_stack.row();
         ammo_stack.add(tag_50()).left();
-        ammo_stack.add(new Label("Increase max cannonball capacity", parent.skin)).left();
+        ammo_stack.add(new Label("Increase cannonball capacity", parent.skin)).left();
         ammo_stack.row();
         ammo_stack.add(ammo_upg_bar).left().fillX().colspan(3);
         upgrades.add(ammo_stack).left().fillX();;
@@ -559,7 +591,7 @@ public class GameScreen extends Page {
         Table damage_stack = new Table();
         damage_stack.row();
         damage_stack.add(tag_50()).left();
-        damage_stack.add(new Label("Increase damage dealt by your cannonballs", parent.skin)).left();
+        damage_stack.add(new Label("Increase attack damage", parent.skin)).left();
         damage_stack.row();
         damage_stack.add(damage_upg_bar).left().fillX().colspan(3);
         upgrades.add(damage_stack).left().fillX();;
@@ -583,7 +615,7 @@ public class GameScreen extends Page {
         Table speed_stack = new Table();
         speed_stack.row();
         speed_stack.add(tag_50()).left();
-        speed_stack.add(new Label("Increase your ship's speed", parent.skin)).left();
+        speed_stack.add(new Label("Increase ship speed", parent.skin)).left();
         speed_stack.row();
         speed_stack.add(speed_upg_bar).left().fillX().colspan(3);
         upgrades.add(speed_stack).left().fillX();
@@ -595,7 +627,8 @@ public class GameScreen extends Page {
                     speed_level += 1;
                     speed_upg_bar.setDrawable(upgrade_bar_components[speed_level]);
                     PlayerController p = GameManager.getPlayer().getComponent(PlayerController.class);
-                    p.setSpeed(p.getSpeed() + 10f);
+                    p.setBase_speed(p.getBase_speed() + 10f);
+                    p.setSpeed(p.getBase_speed());
                     GameManager.getPlayer().getComponent(Pirate.class).spendPlunder(50);
                     dosh.setText(GameManager.getPlayer().getComponent(Pirate.class).getCurrentPlunder());
                 }
@@ -605,9 +638,13 @@ public class GameScreen extends Page {
         upgrades.row();
         upgrades.setFillParent(true);
         shopTable.add(upgrades);
-        shopWindow.add(shopTable);
+//      shopWindow.add(shopTable);
+        shopContainer = new Container <Table>();
+        shopContainer.setActor(shopTable);
+        shopTable.setFillParent(true);
+        shopTable.setTransform(true);
         shopWindow.setVisible(false);
-
+        shopWindow.add(shopContainer).center().bottom().fillX();
         actors.add(shopWindow);
 
 

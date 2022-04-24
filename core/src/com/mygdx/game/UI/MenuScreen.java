@@ -12,6 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.SerializationException;
+import com.mygdx.game.Components.Pirate;
+import com.mygdx.game.Entitys.NPCShip;
+import com.mygdx.game.Entitys.Ship;
 import com.mygdx.game.Managers.GameManager;
 import com.mygdx.game.Managers.ResourceManager;
 import com.mygdx.game.PirateGame;
@@ -85,20 +88,39 @@ public class MenuScreen extends Page {
         t.add(loadData).top().size(100, 25).spaceBottom(space);
         t.row();
 
-        TextButton difficulty = new TextButton("nOOB", parent.skin);
+        TextButton difficulty = new TextButton("Difficulty: Easy", parent.skin);
         difficulty.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                System.out.println(difficulty.getText());
-                if (difficulty.getText().toString().equals("nOOB")) {
-                    difficulty.setText("pRO");
+                if (difficulty.getText().toString().equals("Difficulty: Easy")) {
+                    difficulty.setText("Difficulty: Hard");
+                    GameManager.getPlayer().getComponent(Pirate.class).setAttackDmg(5f); // player is weaker
+                    for(Ship s : GameManager.getShips()){
+                        if (s instanceof NPCShip && !((NPCShip)s).isAlly()){
+                            s.getComponent(Pirate.class).setHealth(150); // enemies are stronger
+                            s.getComponent(Pirate.class).setMaxHealth(150);
+                            s.getComponent(Pirate.class).setAttackDmg(15f); // enemies' attacks more destructive
+                        }
+                    }
+                    GameManager.getLongboi().setHealth(200); // longboi stronger
+                    GameManager.getLongboi().getComponent(Pirate.class).setAttackDmg(15f); // longboi attacks more destructive
                 }
                 else {
-                    difficulty.setText("nOOB");
+                    difficulty.setText("Difficulty: Easy");
+                    GameManager.getPlayer().getComponent(Pirate.class).setAttackDmg(10f);
+                    for(Ship s : GameManager.getShips()){
+                        if (s instanceof NPCShip && !((NPCShip)s).isAlly()){
+                            s.getComponent(Pirate.class).setHealth(100);
+                            s.getComponent(Pirate.class).setMaxHealth(100);
+                            s.getComponent(Pirate.class).setAttackDmg(5f); // enemies are weaker
+                        }
+                    }
+                    GameManager.getLongboi().setHealth(100);
+                    GameManager.getLongboi().getComponent(Pirate.class).setAttackDmg(10f); // longboi bit stronger than enemies but not too much
                 }
             }
         });
-        t.add(difficulty).top().size(100, 25).spaceBottom(space);
+        t.add(difficulty).top().size(120, 30).spaceBottom(space);
         t.row();
 
         TextButton quit = new TextButton("Quit", parent.skin);

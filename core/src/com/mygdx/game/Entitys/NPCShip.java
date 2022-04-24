@@ -95,7 +95,7 @@ public class NPCShip extends Ship implements CollisionCallBack {
             if(getTarget() != null && !getTarget().isAlive()){
                 getComponent(Pirate.class).removeTarget();
             }
-            if (getHealth() == 100f) {
+            if (getHealth() == getComponent(Pirate.class).getMaxHealth()) {
                 red.hide();
                 green.hide();
             } // if not harmed, health bar removed to avoid visual clutter
@@ -103,7 +103,7 @@ public class NPCShip extends Ship implements CollisionCallBack {
                 red.show();
                 green.show();
                 //resizing green and red components according to current health
-                float green_ratio = getHealth() / 100f;
+                float green_ratio = (float) getHealth() / (float) getComponent(Pirate.class).getMaxHealth();
                 green.setSize(32f * green_ratio, 5f);
                 red.setSize(32f * (1f - green_ratio), 5f);
                 red.setOffset(32 * green_ratio, 32f);
@@ -225,7 +225,7 @@ public class NPCShip extends Ship implements CollisionCallBack {
                     getComponent(Pirate.class).takeDamage(shooter.getComponent(Pirate.class).getDmg());
                 }
             }
-            else if ((info.a instanceof CannonBall && ((CannonBall) info.a).getShooter() instanceof Ship && ((Ship)((CannonBall) info.a).getShooter()).getFactionId() != getFactionId()) && (isAlly())) {
+            else if ((info.a instanceof CannonBall && ((CannonBall) info.a).getShooter() instanceof Ship && ((Ship)((CannonBall) info.a).getShooter()).getFactionId() != getFactionId())) {
                 CannonBall ball = ((CannonBall) info.a);
                 Ship shooter = (Ship) ball.getShooter();
                 getComponent(Pirate.class).takeDamage(shooter.getComponent(Pirate.class).getDmg());

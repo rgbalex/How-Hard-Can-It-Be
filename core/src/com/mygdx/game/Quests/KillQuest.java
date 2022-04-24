@@ -1,8 +1,11 @@
 package com.mygdx.game.Quests;
 
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Components.Pirate;
+import com.mygdx.game.Entitys.College;
 import com.mygdx.game.Entitys.Entity;
 import com.mygdx.game.Entitys.Player;
+import com.mygdx.game.Entitys.Ship;
 
 /**
  * A Quest to kill a college is only complete once that college is dead
@@ -35,4 +38,7 @@ public class KillQuest extends Quest {
     public Pirate getTarget() {
         return target;
     }
+
+    public Vector2 getLocation(){return ((College) target.getParent()).getPosition();}
+
 }

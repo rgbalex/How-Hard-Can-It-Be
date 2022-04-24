@@ -1,6 +1,7 @@
 package com.mygdx.game.Entitys;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.mygdx.game.Components.Pirate;
@@ -149,6 +150,13 @@ public class Ship extends Entity implements CollisionCallBack {
         getComponent(Pirate.class).shoot(currentDir);
     }
     public Vector2 getShipDirection(){return currentDir;}
+
+    public float angleTo (Vector2 pos){
+        Transform t = getComponent(Transform.class);
+        float b = pos.x - t.getPosition().x;
+        float a = pos.y - t.getPosition().y;
+        return MathUtils.atan2(a, b) * 180f / 3.14f;
+    }
 
     /**
      * @return copy of the transform's position

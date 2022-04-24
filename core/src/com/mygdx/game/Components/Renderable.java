@@ -69,7 +69,7 @@ public class Renderable extends Component {
             Vector2 s = c.getScale();
 
             sprite.setPosition(p.x + offset.x, p.y + offset.y);
-            sprite.setRotation(MathUtils.radiansToDegrees * c.getRotation());
+            //sprite.setRotation(MathUtils.radiansToDegrees * c.getRotation());
             sprite.setScale(s.x, s.y);
     }
 

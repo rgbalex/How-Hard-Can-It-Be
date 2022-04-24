@@ -2,13 +2,20 @@ package com.mygdx.game.Components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Entitys.Ship;
 import com.mygdx.game.Managers.EntityManager;
 import com.mygdx.game.Managers.GameManager;
+import com.mygdx.game.Managers.QuestManager;
 import com.mygdx.game.Managers.RenderingManager;
+import com.mygdx.game.Quests.KillDuckQuest;
+import com.mygdx.game.Quests.KillQuest;
+import com.mygdx.game.Quests.LocateQuest;
+import com.mygdx.game.Quests.Quest;
+import com.mygdx.utils.Utilities;
 
 import static com.mygdx.utils.Constants.HALF_DIMENSIONS;
 
@@ -17,7 +24,8 @@ import static com.mygdx.utils.Constants.HALF_DIMENSIONS;
  */
 public class PlayerController extends Component {
     private Player player;
-    private float speed;
+    private float current_speed;
+    private float base_speed; // when not powered up
     private int powerupTimer;
     private final Vector2 modifier = new Vector2(-16,-24);
     public PlayerController() {
@@ -25,7 +33,6 @@ public class PlayerController extends Component {
         powerupTimer = 0;
         type = ComponentType.PlayerController;
         setRequirements(ComponentType.RigidBody);
-
     }
 
     /**
@@ -35,8 +42,10 @@ public class PlayerController extends Component {
     public PlayerController(Player player, float speed) {
         this();
         this.player = player;
-        this.speed = speed;
+        this.current_speed = speed;
+        this.base_speed = speed;
     }
+
 
     /**
      * Reads keyboard and mouse inputs, moving and shooting as required.
@@ -44,7 +53,31 @@ public class PlayerController extends Component {
     @Override
     public void update() {
         super.update();
-        final float s = speed;
+        final float s = current_speed;
+        if (QuestManager.anyQuests()){
+            Quest q = QuestManager.currentQuest();
+            Vector2 pos;
+            if (q instanceof KillQuest){
+                pos = ((KillQuest) q).getLocation();
+            }
+            else if (q instanceof LocateQuest){
+                pos = ((LocateQuest) q).getLocation();
+            }
+            else {
+                pos = GameManager.getLongboi().getPosition();
+            }
+            Vector2 ppos = ((Player) parent).getPosition();
+            if (Utilities.distanceToTiles(pos.dst(ppos)) > 7){
+                ((Player) parent).getPointerArrow().show();
+                ((Player) parent).getPointerArrow().getSprite().setRotation(((Player)parent).angleTo(pos));
+            }
+            else{
+                ((Player) parent).getPointerArrow().hide();
+            }
+        }
+        else{
+            ((Player) parent).getPointerArrow().hide();
+        }
         if (powerupTimer > 0){
             if (powerupTimer == 1){
                 stopPowerups();
@@ -56,7 +89,6 @@ public class PlayerController extends Component {
         dir.scl(s);
 //        Here we can scale speed and weather effects by difficulty.
 //        modifier.scl(difficulty);
-
         RigidBody rb = parent.getComponent(RigidBody.class);
         if (player.getBadWeather()) {
             if (!player.isWeatherResistant()) {
@@ -68,18 +100,7 @@ public class PlayerController extends Component {
         RenderingManager.getCamera().position.set(new Vector3(player.getPosition(), 0.0f));
         RenderingManager.getCamera().update();
 
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            int x = Gdx.input.getX();
-            int y = Gdx.input.getY();
 
-            // in range 0 to VIEWPORT 0, 0 bottom left
-            Vector2 delta = new Vector2(x, y);
-            delta.sub(HALF_DIMENSIONS); // center 0, 0
-            delta.nor();
-            delta.y *= -1;
-            // unit dir to fire
-            ((Ship) parent).shoot(delta);
-        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             // unit dir to fire
@@ -122,7 +143,7 @@ public class PlayerController extends Component {
         player.setPoweredUp(true);
         player.setSpedUp(true);
         powerupTimer = (int) (duration / EntityManager.getDeltaTime());
-        speed = speed * multiplier;
+        current_speed = current_speed * multiplier;
     }
 
     /**
@@ -155,11 +176,13 @@ public class PlayerController extends Component {
         player.setWeatherResistant(false);
         player.setSpedUp(false);
         powerupTimer = 0;
-        speed = GameManager.getSettings().get("starting").getFloat("playerSpeed"); //resets speed
+        current_speed = base_speed; //resets speed
     }
 
     public int getPowerupTimer(){return powerupTimer;}
-    public void setSpeed(float newSpeed){speed = newSpeed;}
-    public float getSpeed(){return speed;}
+    public void setSpeed(float newSpeed){current_speed = newSpeed;}
+    public void setBase_speed(float newSpeed){base_speed = newSpeed;}
+    public float getBase_speed(){return base_speed;}
+    public float getSpeed(){return current_speed;}
 
 }

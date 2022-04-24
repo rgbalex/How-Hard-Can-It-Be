@@ -3,7 +3,10 @@ package com.mygdx.game.Entitys;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Components.Pirate;
 import com.mygdx.game.Components.PlayerController;
+import com.mygdx.game.Components.Renderable;
 import com.mygdx.game.Managers.GameManager;
+import com.mygdx.game.Managers.RenderLayer;
+import com.mygdx.game.Managers.ResourceManager;
 
 /**
  * Player's ship entity.
@@ -20,12 +23,16 @@ public class Player extends Ship {
     private boolean WeatherResistant; // true when under the effect of weather resistance
     private boolean SpedUp;
     private boolean badWeather = false;
+    private Renderable pointerArrow;
 
     private Player(float speed) {
         super();
         poweredUp = false;
         PlayerController pc = new PlayerController(this, speed);
-        addComponents(pc);
+        pointerArrow = new Renderable(ResourceManager.getId("arrow.png"), RenderLayer.Transparent);
+        pointerArrow.setSize(16, 8);
+        pointerArrow.setOffset(8f, 36f);
+        addComponents(pc, pointerArrow);
         setName("Player");
     }
 
@@ -71,5 +78,6 @@ public class Player extends Ship {
     public void setHealth(int health) {getComponent(Pirate.class).setHealth(health);}
     public void setPlunder(int plunder) {getComponent(Pirate.class).setPlunder(plunder);}
     public void setCannonBalls(int cannonBalls) {getComponent(Pirate.class).setAmmo(cannonBalls);}
+    public Renderable getPointerArrow(){return pointerArrow;}
 
 }

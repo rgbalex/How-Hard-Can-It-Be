@@ -21,7 +21,6 @@ import com.mygdx.game.Physics.PhysicsBodyType;
 import com.mygdx.utils.Utilities;
 
 public class DuckMonster extends Entity implements CollisionCallBack {
-    public static ObjectMap<Vector2, String> duckDirections;
     private final Vector2 currentDir;
     private boolean isActive; // if 'active', it is fighting the player as part of a quest, otherwise it is offscreen
     private Renderable poison; //green circle, which hurts the player upon entering (duck lives on campus lake so is poisonous af from the water)
@@ -30,6 +29,7 @@ public class DuckMonster extends Entity implements CollisionCallBack {
     private Renderable sprite;
     private int poisonTimer; // to damage player if they are in poison range
     private boolean poisoning;
+    private int maxHealth;
     /**
      * Duck monster entity (inspired by longboi)
      * Spawns as part of quest
@@ -51,7 +51,6 @@ public class DuckMonster extends Entity implements CollisionCallBack {
         poison.setOffset(-32f, -32f);
         poison.hide();
         poisoning = false;
-        //poison.setOffset(-50f, -50f);
         isActive = false;
         cannonTimer = (int) (2 / EntityManager.getDeltaTime());
         green = new Renderable(ResourceManager.getId("progress_bar_green.png"), RenderLayer.Transparent);
@@ -70,9 +69,10 @@ public class DuckMonster extends Entity implements CollisionCallBack {
         rb.addTrigger(128f, "poison");
         rb.setCallback(this);
         addComponents(t, sprite, rb, poison, p, red, green);
+        maxHealth = p.getHealth();
     }
 
-    public void place(float x, float y){
+    public void place(float x, float y) {
         isActive = true;
         getComponent(Transform.class).setPosition(x, y);
         poison.show();
@@ -89,25 +89,25 @@ public class DuckMonster extends Entity implements CollisionCallBack {
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-right"));
             }
             else if (angle > 22.5f && angle < 67.5f){
-                sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-ur"));
+                sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-ur")); //top-right
             }
             else if (angle > 67.5f && angle < 112.5f){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-up"));
             }
             else if (angle > 112.5f && angle < 157.5f){
-                sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-ul"));
+                sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-ul")); //top-left
             }
             else if ((angle > 157.5f && angle < 180f) || (angle < -157.5f && angle > -180f)){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-left"));
             }
             else if (angle < -22.5f && angle > -67.5f){
-                sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-dr"));
+                sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-dr")); //bottom-right
             }
             else if (angle < -67.5f && angle > -112.5f){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-down"));
             }
             else{
-                sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-dl"));
+                sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-dl")); //bottom-left
             }
             if (getHealth() == 100f) {
                 red.hide();
@@ -117,7 +117,7 @@ public class DuckMonster extends Entity implements CollisionCallBack {
                 red.show();
                 green.show();
                 //resizing green and red components according to current health
-                float green_ratio = getHealth() / 100f;
+                float green_ratio = (float) getHealth() / (float) maxHealth; // cast to float or division by zero errors ensue
                 green.setSize(32f * green_ratio, 5f);
                 red.setSize(32f * (1f - green_ratio), 5f);
                 red.setOffset(64f * green_ratio, 64f);
@@ -176,10 +176,15 @@ public class DuckMonster extends Entity implements CollisionCallBack {
     @Override
     public void BeginContact(CollisionInfo info) {
         if(!info.fB.isSensor()){
-            if (info.a instanceof CannonBall && ((CannonBall)info.a).getShooter() instanceof Player){
-                Player p = (Player)((CannonBall)info.a).getShooter();
-                getComponent(Pirate.class).takeDamage(p.getComponent(Pirate.class).getDmg());
-                ((CannonBall)info.a).kill();
+            try {
+                if (info.a instanceof CannonBall && ((CannonBall) info.a).getShooter() instanceof Player) {
+                    Player p = (Player) ((CannonBall) info.a).getShooter();
+                    getComponent(Pirate.class).takeDamage(p.getComponent(Pirate.class).getDmg());
+                    ((CannonBall) info.a).kill();
+                }
+            }
+            catch (Exception e){
+                System.out.println(e);
             }
         }
     }
@@ -214,6 +219,14 @@ public class DuckMonster extends Entity implements CollisionCallBack {
             poisoning = false;
         }
     }
+    /**
+     * Sets baseline health level for seamonster and sets current health level to the max.
+     * Because the seamonster is not revived (or healed) during the game, this method is used purely on spawn (Menuscreen class)
+     * */
+    public void setHealth(int newHealth){
+        getComponent(Pirate.class).setHealth(newHealth);
+        maxHealth = newHealth;
+    }
 
     public void remove(){
         for(Renderable r : getComponents(Renderable.class)){
@@ -221,4 +234,5 @@ public class DuckMonster extends Entity implements CollisionCallBack {
         }
         getComponent(Transform.class).setPosition(1000f, 1000f);
     }
+
 }

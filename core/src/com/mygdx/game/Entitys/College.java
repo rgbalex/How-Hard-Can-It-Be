@@ -45,6 +45,10 @@ public class College extends Entity {
         spawn(f.getColour());
     }
 
+    public Vector2 getPosition(){
+        return getComponent(Transform.class).getPosition();
+    }
+
     /**
      * Randomly populates the college radius with buildings.
      *
