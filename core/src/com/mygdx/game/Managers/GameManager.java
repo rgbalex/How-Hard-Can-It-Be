@@ -311,7 +311,9 @@ public final class GameManager {
         p.setBadWeather(false);
         p.getComponent(Transform.class).setPosition(800f, 800f);
         p.setPlunder(0);
-        p.getComponent(Pirate.class).setAmmo(p.getComponent(Pirate.class).getMaxAmmo());
+        if (longboi.isActive()){
+            longboi.deactivate();
+        }
     }
 
     /**

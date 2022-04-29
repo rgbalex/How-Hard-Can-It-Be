@@ -388,7 +388,7 @@ public class GameScreen extends Page {
             }
 
             healthLabel.setText(String.valueOf(p.getHealth()));
-            dosh.setText(String.valueOf(p.getComponent(Pirate.class).getCurrentPlunder()));
+            dosh.setText(String.valueOf(p.getComponent(Pirate.class).getPlunder()));
             ammo.setText(String.valueOf(p.getAmmo()));
             if (p.isPoweredUp()) {
                 if (!current_powup.isVisible()) {
@@ -453,6 +453,10 @@ public class GameScreen extends Page {
                 }
             }
             shopWindow.setVisible(true);
+            ammo_upg_bar.setDrawable(upgrade_bar_components[ammo_level]);
+            health_upg_bar.setDrawable(upgrade_bar_components[health_level]);
+            speed_upg_bar.setDrawable(upgrade_bar_components[speed_level]);
+            damage_upg_bar.setDrawable(upgrade_bar_components[damage_level]);
         }
         else{ //paused
             pauseScreen.setSize(
@@ -660,6 +664,7 @@ public class GameScreen extends Page {
                 GameManager.reset();
                 QuestManager.reset();
                 Player p = GameManager.getPlayer();
+                dosh.setText(p.getPlunder());
                 p.getComponent(PlayerController.class).stopPowerups();
                 Pirate pirate = p.getComponent(Pirate.class);
                 pirate.setMaxHealth(pirate.getMaxHealth() - (health_level * 20));

@@ -81,6 +81,12 @@ public class DuckMonster extends Entity implements CollisionCallBack {
         poison.show();
     }
 
+    public void deactivate(){
+        isActive = false;
+        getComponent(Transform.class).setPosition(10000f, 10000f);
+        getComponent(Pirate.class).setHealth(maxHealth);
+    }
+
     public boolean isActive(){return isActive;}
     public String getDir(){return dir;}
 
