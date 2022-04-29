@@ -33,6 +33,12 @@ public class QuestManager {
         allQuests.add(1, new KillDuckQuest()); // after doing a couple of quests, the player is tasked with killing longboi
     }
 
+    public static void reset(){
+        allQuests = new ArrayList<>();
+        createRandomQuests();
+        allQuests.add(1, new KillDuckQuest());
+    }
+
     /**
      * Creates a random kill quest on a random college
      *

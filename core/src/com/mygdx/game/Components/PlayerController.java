@@ -46,7 +46,6 @@ public class PlayerController extends Component {
         this.base_speed = speed;
     }
 
-
     /**
      * Reads keyboard and mouse inputs, moving and shooting as required.
      */

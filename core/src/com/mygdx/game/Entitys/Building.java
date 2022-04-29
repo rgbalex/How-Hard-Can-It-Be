@@ -74,6 +74,16 @@ public class Building extends Entity implements CollisionCallBack {
         getComponent(Pirate.class).kill();
     }
 
+    public void revive(){
+        if (isFlag) {
+            return;
+        }
+        Sprite s = ResourceManager.getSprite(atlas_id, buildingName);
+        Renderable r = getComponent(Renderable.class);
+        r.setTexture(s);
+        getComponent(Pirate.class).setHealth(100);
+    }
+
     public boolean isAlive() {
         return getComponent(Pirate.class).isAlive();
     }

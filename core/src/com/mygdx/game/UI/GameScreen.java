@@ -652,7 +652,31 @@ public class GameScreen extends Page {
         pauseScreen = new Window("", parent.skin);
         Table pauseTable = new Table();
         TextButton resume = new TextButton("Resume", parent.skin);
+        TextButton restart = new TextButton("Restart", parent.skin);
         TextButton save = new TextButton("Save", parent.skin);
+        restart.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                GameManager.reset();
+                QuestManager.reset();
+                Player p = GameManager.getPlayer();
+                p.getComponent(PlayerController.class).stopPowerups();
+                Pirate pirate = p.getComponent(Pirate.class);
+                pirate.setMaxHealth(pirate.getMaxHealth() - (health_level * 20));
+                pirate.setAttackDmg(pirate.getDmg() - (float)(ammo_level * 20));
+                PlayerController c = p.getComponent(PlayerController.class);
+                c.setBase_speed(c.getBase_speed() - (float)(speed_level * 10));
+                pirate.setMaxAmmo(pirate.getMaxAmmo() - (ammo_level * 20));
+                pirate.setAmmo(pirate.getMaxAmmo());
+                pirate.setHealth(pirate.getMaxHealth());
+                health_level = 0;
+                speed_level = 0;
+                ammo_level = 0;
+                damage_level = 0;
+                timer_points = 0;
+                paused = false;
+            }
+        });
 //        TextButton quit = new TextButton("main menu", parent.skin);
         resume.addListener(new ClickListener(){
             @Override
@@ -678,6 +702,8 @@ public class GameScreen extends Page {
         pauseTable.add(pauseLabel);
         pauseTable.row();
         pauseTable.add(resume).padBottom(10f);
+        pauseTable.row();
+        pauseTable.add(restart).padBottom(10f);;
         pauseTable.row();
         pauseTable.add(save).padBottom(10f);;
         pauseTable.row();

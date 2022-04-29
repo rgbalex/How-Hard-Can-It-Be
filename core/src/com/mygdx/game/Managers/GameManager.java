@@ -295,6 +295,25 @@ public final class GameManager {
         return factions.get(factionId - 1);
     }
 
+    public static void reset(){
+        for (Ship s : ships){
+            s.getComponent(Pirate.class).setHealth(s.getComponent(Pirate.class).getMaxHealth());
+            s.getComponent(Transform.class).setPosition(getFaction(s.getFactionId()).getSpawnPos());
+            s.getComponent(RigidBody.class).setPosition(getFaction(s.getFactionId()).getSpawnPos());
+        }
+        for (College c : colleges){
+            c.getComponent(Pirate.class).setHealth(100);
+            for (Building b : c.getBuildings()){
+                b.revive();
+            }
+        }
+        Player p = GameManager.getPlayer();
+        p.setBadWeather(false);
+        p.getComponent(Transform.class).setPosition(800f, 800f);
+        p.setPlunder(0);
+        p.getComponent(Pirate.class).setAmmo(p.getComponent(Pirate.class).getMaxAmmo());
+    }
+
     /**
      * Gets the setting object from the GameSetting.json
      *
