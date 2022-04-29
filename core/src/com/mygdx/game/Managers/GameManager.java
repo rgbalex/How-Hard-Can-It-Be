@@ -229,7 +229,6 @@ public final class GameManager {
                 s.getComponent(RigidBody.class).setPosition(getFaction(i + 1).getSpawnPos());
             }
         }
-        longboi = new DuckMonster();
 
     }
 
@@ -241,8 +240,8 @@ public final class GameManager {
         Player p = new Player();
         p.setPlayer();
         p.setFaction(1);
-        p.getComponent(Pirate.class).takeDamage(10f);
         ships.add(p);
+        longboi = new DuckMonster();
     }
 
     /**

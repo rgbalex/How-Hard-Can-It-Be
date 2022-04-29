@@ -22,8 +22,18 @@ public class MovementTests {
         int atlas_id = ResourceManager.addTextureAtlas("Boats.txt");
         int extras_id = ResourceManager.addTextureAtlas("UISkin/skin.atlas");
         int buildings_id = ResourceManager.addTextureAtlas("Buildings.txt");
+        int powups_atlas_id = ResourceManager.addTextureAtlas("upgrades_powerups.txt");
         ResourceManager.addTexture("menuBG.jpg");
         ResourceManager.addTexture("Chest.png");
+        ResourceManager.addTexture("progress_bar_red.png");
+        ResourceManager.addTexture("progress_bar_green.png");
+        ResourceManager.addTexture("points_star.png");
+        ResourceManager.addTextureAtlas("upgrade_tier_bar.txt");
+        ResourceManager.addTextureAtlas("upgrade_pricetags.txt");
+        ResourceManager.addTextureAtlas("longboi_moveset.txt");
+        ResourceManager.addTextureAtlas("Eggball.txt");
+        ResourceManager.addTexture("poison.png");
+        ResourceManager.addTexture("arrow.png");
         ResourceManager.loadAssets();
         INIT_CONSTANTS();
         PhysicsManager.Initialize(false);

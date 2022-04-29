@@ -1,0 +1,61 @@
+longboi_moveset.png
+size: 128, 64
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+duck-up
+  rotate: false
+  xy: 6, 32
+  size: 19, 32
+  orig: 19, 32
+  offset: 0, 0
+  index: -1
+duck-down
+  rotate: false
+  xy: 38, 32
+  size: 18, 32
+  orig: 18, 32
+  offset: 0, 0
+  index: -1
+duck-left
+  rotate: false
+  xy: 34, 0
+  size: 24, 32
+  orig: 24, 32
+  offset: 0, 0
+  index: -1
+duck-right
+  rotate: false
+  xy: 7, 0
+  size: 24, 32
+  orig: 24, 32
+  offset: 0, 0
+  index: -1
+duck-ul
+  rotate: false
+  xy: 102, 33
+  size: 18, 31
+  orig: 18, 31
+  offset: 0, 0
+  index: -1
+duck-ur
+  rotate: false
+  xy: 71, 33
+  size: 20, 31
+  orig: 20, 31
+  offset: 0, 0
+  index: -1
+duck-dr
+  rotate: false
+  xy: 71, 0
+  size: 19, 32
+  orig: 19, 32
+  offset: 0, 0
+  index: -1
+duck-dl
+  rotate: false
+  xy: 102, 0
+  size: 19, 32
+  orig: 19, 32
+  offset: 0, 0
+  index: -1

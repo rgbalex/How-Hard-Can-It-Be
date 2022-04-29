@@ -30,6 +30,7 @@ public class DuckMonster extends Entity implements CollisionCallBack {
     private int poisonTimer; // to damage player if they are in poison range
     private boolean poisoning;
     private int maxHealth;
+    private String dir;
     /**
      * Duck monster entity (inspired by longboi)
      * Spawns as part of quest
@@ -51,6 +52,7 @@ public class DuckMonster extends Entity implements CollisionCallBack {
         poison.setOffset(-32f, -32f);
         poison.hide();
         poisoning = false;
+        poisonTimer = (int) (3 / EntityManager.getDeltaTime());
         isActive = false;
         cannonTimer = (int) (2 / EntityManager.getDeltaTime());
         green = new Renderable(ResourceManager.getId("progress_bar_green.png"), RenderLayer.Transparent);
@@ -70,6 +72,7 @@ public class DuckMonster extends Entity implements CollisionCallBack {
         rb.setCallback(this);
         addComponents(t, sprite, rb, poison, p, red, green);
         maxHealth = p.getHealth();
+        dir = "up";
     }
 
     public void place(float x, float y) {
@@ -79,6 +82,7 @@ public class DuckMonster extends Entity implements CollisionCallBack {
     }
 
     public boolean isActive(){return isActive;}
+    public String getDir(){return dir;}
 
     @Override
     public void update(){
@@ -87,27 +91,35 @@ public class DuckMonster extends Entity implements CollisionCallBack {
             float angle = angleTo(GameManager.getPlayer().getPosition());
             if (angle < 22.5f && angle > -22.5f){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-right"));
+                dir = "right";
             }
             else if (angle > 22.5f && angle < 67.5f){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-ur")); //top-right
+                dir = "ur";
             }
             else if (angle > 67.5f && angle < 112.5f){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-up"));
+                dir = "up";
             }
             else if (angle > 112.5f && angle < 157.5f){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-ul")); //top-left
+                dir = "ul";
             }
             else if ((angle > 157.5f && angle < 180f) || (angle < -157.5f && angle > -180f)){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-left"));
+                dir = "left";
             }
             else if (angle < -22.5f && angle > -67.5f){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-dr")); //bottom-right
+                dir = "dr";
             }
             else if (angle < -67.5f && angle > -112.5f){
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-down"));
+                dir = "down";
             }
             else{
                 sprite.setTexture(ResourceManager.getSprite(ResourceManager.getId("longboi_moveset.txt"), "duck-dl")); //bottom-left
+                dir = "dl";
             }
             if (getHealth() == 100f) {
                 red.hide();
@@ -206,6 +218,10 @@ public class DuckMonster extends Entity implements CollisionCallBack {
             poisoning = true;
             poisonTimer = (int) (3 / EntityManager.getDeltaTime());
         }
+    }
+
+    public int getPoisonTimer(){
+        return poisonTimer;
     }
 
     @Override

@@ -1,0 +1,19 @@
+upgrade_pricetags.png
+size: 52 ,40
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+tag-50
+  rotate: false
+  xy: 0, 0
+  size: 52, 20
+  orig: 52, 20
+  offset: 0, 0
+  index: -1
+tag-30
+  rotate: false
+  xy: 0, 20
+  size: 52, 20
+  orig: 52, 20
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,33 @@
+upgrade_tier_bar.png
+size: 128, 80
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+tier-0
+  rotate: false
+  xy: 0, 0
+  size: 128, 20
+  orig: 128, 20
+  offset: 0, 0
+  index: -1
+tier-1
+  rotate: false
+  xy: 0, 20
+  size: 128, 20
+  orig: 128, 20
+  offset: 0, 0
+  index: -1
+tier-2
+  rotate: false
+  xy: 0, 40
+  size: 128, 20
+  orig: 128, 20
+  offset: 0, 0
+  index: -1
+tier-3
+  rotate: false
+  xy: 0, 60
+  size: 128, 20
+  orig: 128, 20
+  offset: 0, 0
+  index: -1

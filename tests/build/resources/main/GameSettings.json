@@ -2,8 +2,9 @@
   "starting": {
     "health": 100,
     "damage": 10.0,
+    "points": 0,
     "plunder": 0,
-    "playerSpeed": 100.0,
+    "playerSpeed": 50.0,
     "cannonSpeed": 10000.0,
     "argoRange_tiles": 9.0,
     "attackRange_tiles": 4.0,
