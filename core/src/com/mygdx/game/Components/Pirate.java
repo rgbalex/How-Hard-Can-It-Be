@@ -158,7 +158,9 @@ public class Pirate extends Component {
     }
 
     public void removeTarget() {
-        targets.pop();
+        if (!targets.isEmpty()) {
+            targets.pop();
+        }
     }
 
     public boolean isAlive() {

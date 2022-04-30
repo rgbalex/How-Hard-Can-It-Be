@@ -285,15 +285,15 @@ public class NPCShip extends Ship implements CollisionCallBack {
                 Pirate pirate = getComponent(Pirate.class);
                 Ship o = (Ship) info.a;
                 // remove the object from the targets list
-                for (Ship targ : pirate.getTargets()) {
-                    if (targ == o) {
-                        if (!(isAlly() && targ instanceof Player)) {
-                            pirate.getTargets().remove(targ);
-                            break;
+                    for (Ship targ : pirate.getTargets()) {
+                        if (targ == o) {
+                            if (!(isAlly() && targ instanceof Player)) {
+                                pirate.getTargets().remove(targ);
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
     }
-}
