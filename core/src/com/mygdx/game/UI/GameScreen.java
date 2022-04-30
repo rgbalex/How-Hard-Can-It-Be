@@ -312,7 +312,6 @@ public class GameScreen extends Page {
     @Override
     protected void update() {
         if(!paused && !shopOpen) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.K)){GameManager.getPlayer().getComponent(Pirate.class).takeDamage(50f);}
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 int x = Gdx.input.getX();
                 int y = Gdx.input.getY();
