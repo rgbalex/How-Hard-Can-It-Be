@@ -6,6 +6,8 @@ import com.mygdx.game.Components.Pirate;
 import com.mygdx.game.Components.Renderable;
 import com.mygdx.game.Components.RigidBody;
 import com.mygdx.game.Components.Transform;
+import com.mygdx.game.Managers.EntityManager;
+import com.mygdx.game.Managers.GameManager;
 import com.mygdx.game.Managers.RenderLayer;
 import com.mygdx.game.Managers.ResourceManager;
 import com.mygdx.game.Physics.CollisionCallBack;
@@ -21,6 +23,9 @@ public class Building extends Entity implements CollisionCallBack {
     private String buildingName;
     private static int atlas_id;
     private boolean isFlag;
+    private boolean isDefender; // if true, building acts as defender for its college (shoots and has health instead of insta dying)
+    private int cannonTimer;
+    private Renderable green, red;
 
     Building() {
         super();
@@ -31,6 +36,16 @@ public class Building extends Entity implements CollisionCallBack {
         atlas_id = ResourceManager.getId("Buildings.txt");
         Renderable r = new Renderable(atlas_id, "big", RenderLayer.Transparent);
         addComponents(t, p, r);
+        isDefender = false;
+        green = new Renderable(ResourceManager.getId("progress_bar_green.png"), RenderLayer.Transparent);
+        red = new Renderable(ResourceManager.getId("progress_bar_red.png"), RenderLayer.Transparent);
+        addComponents(green, red);
+        green.setOffset(0f, 32f);
+        green.setSize(32f, 5f);
+        red.setOffset(32f, 32f);
+        red.setSize(5f, 5f);
+        green.show();
+        red.show();
     }
 
     /**
@@ -41,6 +56,10 @@ public class Building extends Entity implements CollisionCallBack {
     Building(boolean isFlag) {
         this();
         this.isFlag = isFlag;
+    }
+
+    public boolean isNonFlag(){
+        return !isFlag;
     }
 
     /**
@@ -61,6 +80,16 @@ public class Building extends Entity implements CollisionCallBack {
         addComponent(rb);
     }
 
+    public void makeDefender(){
+        isDefender = true;
+        cannonTimer = (int) (3f / EntityManager.getDeltaTime());
+        getComponent(RigidBody.class).addTrigger(500, "agro_college");
+    }
+
+    public int getHealth(){
+        return getComponent(Pirate.class).getHealth();
+    }
+
     /**
      * Replace the building with ruins and mark as broken.
      */
@@ -72,6 +101,43 @@ public class Building extends Entity implements CollisionCallBack {
         Renderable r = getComponent(Renderable.class);
         r.setTexture(s);
         getComponent(Pirate.class).kill();
+        red.hide();
+        green.hide();
+    }
+    @Override
+    public void update(){
+        if (getComponent(Pirate.class).isAlive() && isDefender){
+            if (getComponent(Pirate.class).getTarget() instanceof Player){
+                if (cannonTimer == 0){
+                    getComponent(Pirate.class).shoot(GameManager.getPlayer().getPosition().sub(getComponent(Transform.class).getPosition()).scl(100f));
+                    cannonTimer = (int) (3f / EntityManager.getDeltaTime());
+                }
+                else{
+                    cannonTimer --;
+                }
+            }
+            if (getHealth() == getComponent(Pirate.class).getMaxHealth()) {
+                red.hide();
+                green.hide();
+            } // if not harmed, health bar removed to avoid visual clutter
+            else {
+                red.show();
+                green.show();
+                //resizing green and red components according to current health
+                float green_ratio = (float) getHealth() / (float) getComponent(Pirate.class).getMaxHealth();
+                green.setSize(32f * green_ratio, 5f);
+                red.setSize(32f * (1f - green_ratio) * BUILDING_SCALE, 5f);
+                red.setOffset(32 * green_ratio * BUILDING_SCALE, 32f);
+            }
+
+        }
+        else if (!getComponent(Pirate.class).isAlive() && isDefender){
+            destroy();
+        }
+        else if (!isDefender){
+            red.hide();
+            green.hide();
+        }
     }
 
     public void revive(){
@@ -81,7 +147,12 @@ public class Building extends Entity implements CollisionCallBack {
         Sprite s = ResourceManager.getSprite(atlas_id, buildingName);
         Renderable r = getComponent(Renderable.class);
         r.setTexture(s);
-        getComponent(Pirate.class).setHealth(100);
+        Pirate p = getComponent(Pirate.class);
+        p.setHealth(100);
+        if (p.getTarget() != null) {p.removeTarget();}
+        red.hide();
+        green.hide();
+
     }
 
     public boolean isAlive() {
@@ -105,22 +176,35 @@ public class Building extends Entity implements CollisionCallBack {
      */
     @Override
     public void EnterTrigger(CollisionInfo info) {
-        if (info.a instanceof CannonBall && isAlive()) {
-            CannonBall b = (CannonBall) info.a;
-            // the ball if from the same faction
+        if(!info.fB.isSensor()){
+            if (info.a instanceof CannonBall && isAlive() && !isFlag) { // bullets travel through flags
+                CannonBall b = (CannonBall) info.a;
+                // the ball if from the same faction
             /*if(Objects.equals(b.getShooter().getComponent(Pirate.class).getFaction().getName(),
                     getComponent(Pirate.class).getFaction().getName())) {
                 return;
             }*/
-            if (b.getShooter() instanceof Player){
-                destroy();
+                if (! (b.getShooter() instanceof Building)){
+                    if (b.getShooter() instanceof Player && !isDefender) {
+                        destroy();
+                    } else if (b.getShooter() instanceof Player && isDefender) {
+                        getComponent(Pirate.class).takeDamage(info.b.getComponent(Pirate.class).getDmg());
+                    }
+                    ((CannonBall) info.a).kill();
+                }
             }
-            ((CannonBall) info.a).kill();
+        }
+        else if(info.a instanceof Player){
+            getComponent(Pirate.class).addTarget((Player) info.a);
+            cannonTimer = (int) (4f / EntityManager.getDeltaTime());
         }
     }
 
     @Override
     public void ExitTrigger(CollisionInfo info) {
+        if (info.fB.isSensor() && info.a instanceof Player){
+            getComponent(Pirate.class).removeTarget();
+        }
 
     }
 

@@ -169,10 +169,10 @@ public class Ship extends Entity implements CollisionCallBack {
     public void BeginContact(CollisionInfo info) {
         if (info.a instanceof CannonBall && this instanceof Player){ //cannonball hits player
             CannonBall ball = (CannonBall) info.a;
-            if ((ball.getShooter() instanceof Ship && ((Ship)(ball.getShooter())).getFactionId() != getFactionId()) || (ball.getShooter() instanceof DuckMonster)) { // enemy from different faction
+            if ((ball.getShooter() instanceof Ship && ((Ship)(ball.getShooter())).getFactionId() != getFactionId()) || (ball.getShooter() instanceof DuckMonster) || (ball.getShooter() instanceof Building)) { // enemy from different faction
                 ball.kill();
                 if(!(((Player) this).isInvincible())){ // accounting for powerups (see Powerup.java)
-                    //getComponent(Pirate.class).takeDamage(10f);
+                    getComponent(Pirate.class).takeDamage(10f);
                 }
             } // if cannonball is shot by a friendly ship (same faction) it will travel through player
         }

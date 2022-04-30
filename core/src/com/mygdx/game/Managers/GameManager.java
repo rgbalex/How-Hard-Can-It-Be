@@ -221,7 +221,7 @@ public final class GameManager {
             CreateCollege(i + 1);
             for (int j = 0; j < cnt; j++) {
                 // prevents halifax from having shipcount + player
-                if (i == 0 && j > cnt - 3) {
+                if (i == 0 && j > cnt - 2) {
                     break;
                 }
                 NPCShip s = CreateNPCShip(i + 1);
@@ -282,6 +282,14 @@ public final class GameManager {
         tryInit();
         College c = new College(factionId);
         colleges.add(c);
+        if (c.getComponent(Pirate.class).getFaction().id != getPlayer().getFactionId()){ // enemy colleges get defenders
+            for (Building b : c.getBuildings()) {
+                if (b.isNonFlag()) {
+                    b.makeDefender(); // 1 building per college is a defender
+                    break;
+                }
+            }
+        }
     }
 
     private static void tryInit() {
@@ -296,6 +304,7 @@ public final class GameManager {
     }
 
     public static void reset(){
+        Random r = new Random();
         for (Ship s : ships){
             s.getComponent(Pirate.class).setHealth(s.getComponent(Pirate.class).getMaxHealth());
             s.getComponent(Transform.class).setPosition(getFaction(s.getFactionId()).getSpawnPos());
@@ -313,6 +322,9 @@ public final class GameManager {
         p.setPlunder(0);
         if (longboi.isActive()){
             longboi.deactivate();
+        }
+        for (Powerup pow : powerups){
+            pow.updateType(r.nextInt(5));
         }
     }
 

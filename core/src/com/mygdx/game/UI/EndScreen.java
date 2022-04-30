@@ -63,15 +63,25 @@ public class EndScreen extends Page {
 //        });
 //        t.add(replay).spaceBottom(3f);
 //        t.row();
-        TextButton b = new TextButton("Exit", parent.skin);
-        b.addListener(new ChangeListener() {
+        TextButton mainMenu = new TextButton("Main Menu", parent.skin);
+        mainMenu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                GameManager.reset();
+                parent.setScreen(parent.menu);
+            }
+        });
+        TextButton exit = new TextButton("Exit", parent.skin);
+        exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.exit();
                 System.exit(0);
             }
         });
-        t.add(b);
+        t.add(mainMenu);
+        t.row();
+        t.add(exit);
     }
 
     @Override

@@ -96,7 +96,7 @@ public class Pirate extends Component {
 
 
     /**
-     * Will shoot a cannonball assigning this.parent as the cannonball's parent (must be Ship atm)
+     * Will shoot a cannonball assigning this.parent as the cannonball's parent
      *
      * @param dir the direction to shoot in
      */
