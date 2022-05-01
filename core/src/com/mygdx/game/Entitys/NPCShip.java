@@ -28,6 +28,8 @@ import static com.mygdx.utils.Constants.HALF_DIMENSIONS;
 
 /**
  * NPC ship entity class.
+ * Has a state machine, follows targets and shoots at them in regular intervals.
+ * Has a health bar.
  */
 public class NPCShip extends Ship implements CollisionCallBack {
     public StateMachine<NPCShip, EnemyState> stateMachine;
@@ -85,7 +87,10 @@ public class NPCShip extends Ship implements CollisionCallBack {
 
 
     /**
-     * updates the state machine
+     * Called every frame.
+     * Updates state machine
+     * Counts down until next cannon shot
+     * Updates healthbar to reflect current health
      */
     @Override
     public void update() {

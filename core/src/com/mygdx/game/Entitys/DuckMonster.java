@@ -19,7 +19,15 @@ import com.mygdx.game.Physics.CollisionCallBack;
 import com.mygdx.game.Physics.CollisionInfo;
 import com.mygdx.game.Physics.PhysicsBodyType;
 import com.mygdx.utils.Utilities;
-
+/**
+ * Duck monster entity (inspired by longboi)
+ * Spawns as part of quest
+ * Shoots egg cannonballs at player and has a poisonous area around it that harms the player
+ * Doesnt move, but turns to face the player
+ * Once killed, player gets a bunch of plunder.
+ *
+ * Has a healthbar, like NPC ships.
+ * */
 public class DuckMonster extends Entity implements CollisionCallBack {
     private final Vector2 currentDir;
     private boolean isActive; // if 'active', it is fighting the player as part of a quest, otherwise it is offscreen
@@ -31,13 +39,7 @@ public class DuckMonster extends Entity implements CollisionCallBack {
     private boolean poisoning;
     private int maxHealth;
     private String dir;
-    /**
-     * Duck monster entity (inspired by longboi)
-     * Spawns as part of quest
-     * Shoots egg cannonballs at player and has a poisonous area around it that harms the player
-     * Doesnt move, but turns to face the player
-     * Once killed, player gets a bunch of plunder.
-     * */
+
     public DuckMonster(){
         super();
         currentDir = new Vector2(0, 1);
@@ -74,13 +76,22 @@ public class DuckMonster extends Entity implements CollisionCallBack {
         maxHealth = p.getHealth();
         dir = "up";
     }
-
+    /**
+     * Called upon beginning of "Kill longboi" quests.
+     * Places the duck in a given spot and sets it as active.
+     * Renders poison aura as visible.
+     * @param x x coordinate of new position
+     * @param y y coordinate of new position
+     *
+     * */
     public void place(float x, float y) {
         isActive = true;
         getComponent(Transform.class).setPosition(x, y);
         poison.show();
     }
-
+    /**
+     * Removes the duck off screen and sets health back to maximum.
+     * */
     public void deactivate(){
         isActive = false;
         getComponent(Transform.class).setPosition(10000f, 10000f);
@@ -89,7 +100,13 @@ public class DuckMonster extends Entity implements CollisionCallBack {
 
     public boolean isActive(){return isActive;}
     public String getDir(){return dir;}
-
+    /**
+     * Called every frame.
+     * Calculates the sprite required to make the duck face the player.
+     * Counts down to the next shot and shoots if player is in agro range.
+     * Updates healthbar to reflect current health
+     * If player is in the poison aura, counts down to the next time the player is hurt by the aura
+     * */
     @Override
     public void update(){
         if(isActive){
@@ -191,6 +208,10 @@ public class DuckMonster extends Entity implements CollisionCallBack {
     public Vector2 getPosition(){
         return getComponent(Transform.class).getPosition();
     }
+
+    /**
+     * Upon collision with a cannonball fired by the player, kill the cannonball and take damage.
+     * */
     @Override
     public void BeginContact(CollisionInfo info) {
         if(!info.fB.isSensor()){
@@ -211,7 +232,10 @@ public class DuckMonster extends Entity implements CollisionCallBack {
     public void EndContact(CollisionInfo info) {
 
     }
-
+    /**
+     * Adds player to target if agro range entered.
+     * Tells duck to begin counting down to poison the player if poison range entered.
+     * */
     @Override
     public void EnterTrigger(CollisionInfo info) {
         if(info.fB.getUserData() == "agro"){
@@ -249,7 +273,9 @@ public class DuckMonster extends Entity implements CollisionCallBack {
         getComponent(Pirate.class).setHealth(newHealth);
         maxHealth = newHealth;
     }
-
+    /**
+     * Places the duck offscreen and makes renderable invisible
+     * */
     public void remove(){
         for(Renderable r : getComponents(Renderable.class)){
             r.hide();

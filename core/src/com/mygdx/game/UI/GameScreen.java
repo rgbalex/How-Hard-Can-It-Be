@@ -28,7 +28,10 @@ import com.mygdx.game.Quests.Quest;
 import com.mygdx.utils.Constants;
 
 import static com.mygdx.utils.Constants.*;
-
+/**
+ * The screen the player will spend the majority of time playing on.
+ * Contains the game viewport, UI, provides access to the shop etc.
+ * */
 public class GameScreen extends Page {
     private Label healthLabel;
     private Label dosh;
@@ -682,7 +685,6 @@ public class GameScreen extends Page {
                 paused = false;
             }
         });
-//        TextButton quit = new TextButton("main menu", parent.skin);
         resume.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -695,23 +697,27 @@ public class GameScreen extends Page {
                 s = new SaveManager(health_level, ammo_level, speed_level, damage_level, timer_points);
             }
         });
-//        quit.addListener(new ClickListener(){
-//            @Override
-//            public void clicked(InputEvent event, float x, float y){
-//                parent.setScreen(parent.menu);
-//                paused = false;
-//            }
-//        });
+        TextButton mainMenu = new TextButton("Main Menu", parent.skin);
+        mainMenu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                GameManager.reset();
+                paused = false;
+                parent.setScreen(parent.menu);
+            }
+        });
         Label pauseLabel = new Label("Pause", parent.skin);
         pauseLabel.setFontScale(2f);
         pauseTable.add(pauseLabel);
         pauseTable.row();
         pauseTable.add(resume).padBottom(10f);
         pauseTable.row();
-        pauseTable.add(restart).padBottom(10f);;
+        pauseTable.add(restart).padBottom(10f);
         pauseTable.row();
-        pauseTable.add(save).padBottom(10f);;
+        pauseTable.add(save).padBottom(10f);
         pauseTable.row();
+        pauseTable.add(mainMenu).padBottom(10f);
+
 //        pauseTable.add(quit);
         pauseScreen.add(pauseTable);
         pauseScreen.setBackground(new TextureRegionDrawable(new Texture("shop_screen.png")));

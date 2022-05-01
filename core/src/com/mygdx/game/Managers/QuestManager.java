@@ -34,7 +34,7 @@ public class QuestManager {
     }
 
     public static void reset(){
-        allQuests = new ArrayList<>();
+        allQuests.clear();
         createRandomQuests();
         allQuests.add(1, new KillDuckQuest());
     }

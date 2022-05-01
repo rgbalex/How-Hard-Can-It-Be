@@ -54,7 +54,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
     }
 
     /**
-     * Removes the cannonball offscreen once it hits a target.
+     * Removes the cannonball offscreen once it hits a target or its lifetime expires.
      */
     private void removeOnCollision() {
         if (toggleLife || life_remaining == 0) {
@@ -70,11 +70,12 @@ public class CannonBall extends Entity implements CollisionCallBack {
     }
 
     /**
-     * Teleport the cannonball in from offscreen and set in flying away from the ship.
-     *
+     * Teleport the cannonball in from offscreen and set in flying away from the firing entity.
+     * Changes sprite for cannonballs shot by a duck monster
+     * For cannonballs shot by ships, changes sprite to default cannonball sprite.
      * @param pos    2D vector location from where it sets off
      * @param dir    2D vector direction for its movement **NOT THE LOCATION OF THE TARGET**
-     * @param sender ship entity firing it
+     * @param sender entity firing it
      */
     public void fire(Vector2 pos, Vector2 dir, Entity sender) {
         shooter = sender;

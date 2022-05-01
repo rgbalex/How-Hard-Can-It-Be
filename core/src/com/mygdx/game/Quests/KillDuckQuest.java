@@ -3,7 +3,9 @@ package com.mygdx.game.Quests;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Managers.GameManager;
-
+/**
+ * A quest to kill an instance of DuckMonster, complete once the instance is dead.
+ * */
 public class KillDuckQuest extends Quest{
     public KillDuckQuest(){
         super();

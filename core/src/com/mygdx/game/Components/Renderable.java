@@ -120,10 +120,22 @@ public class Renderable extends Component {
     public void toggleVisibility() {
         isVisible = !isVisible;
     }
-
+    /**
+     * Changes size to the width and height specified.
+     * @param w new width of renderable
+     * @param h new height of renderable
+     * */
     public void setSize(float w, float h){
         sprite.setSize(w, h);
     }
+
+    /**
+     * Normally, the renderables "attach" to the center of their rigid bodies.
+     * This function allows to change renderable position with regards to a rigid body it represents.
+     * Allows for things like healthbars, names, etc to be rendered near but not directly over rigid body.
+     * @param x amount of pixels to offset horizontally by
+     * @param y amount of pixels to offset vertically by
+     * */
     public void setOffset(float x, float y){
         offset = new Vector2(x, y);
     }

@@ -64,9 +64,11 @@ public final class GameManager {
             factions.add(new Faction(name, col, pos, spawn, factions.size() + 1));
         }
     }
-
+    /**
+     * Loads a game from an existing JSON file specifying ship location, health, plunder and other game statistics
+     * */
     public static void load_game(JsonValue _factions, JsonValue _ships, JsonValue _colleges, JsonValue _quests, JsonValue base) {
-
+        reset();
         factions.clear();
         factions = new ArrayList<>();
 
@@ -193,7 +195,7 @@ public final class GameManager {
 
 
     /**
-     * called every frame checks id the quests are completed
+     * called every frame, checks id the quests are completed
      */
     public static void update() {
         QuestManager.checkCompleted();
@@ -259,7 +261,7 @@ public final class GameManager {
     }
 
     /**
-     * Creates the world map
+     * Creates the world map and distributes powerups
      *
      * @param mapId resource id
      */
@@ -302,9 +304,11 @@ public final class GameManager {
         tryInit();
         return factions.get(factionId - 1);
     }
-
+    /**
+     * Resets the game.
+     * Places ships back to spawn position, sets plunder and points to zero, removes bad weather animation, stops effects of powerups, revives dead ships and buildings
+     * */
     public static void reset(){
-        Random r = new Random();
         for (Ship s : ships){
             s.getComponent(Pirate.class).setHealth(s.getComponent(Pirate.class).getMaxHealth());
             s.getComponent(Transform.class).setPosition(getFaction(s.getFactionId()).getSpawnPos());
@@ -322,9 +326,6 @@ public final class GameManager {
         p.setPlunder(0);
         if (longboi.isActive()){
             longboi.deactivate();
-        }
-        for (Powerup pow : powerups){
-            pow.updateType(r.nextInt(5));
         }
     }
 

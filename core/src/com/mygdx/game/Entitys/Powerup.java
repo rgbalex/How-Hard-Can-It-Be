@@ -78,7 +78,10 @@ public class Powerup extends Entity implements CollisionCallBack {
             place(new_pos.x * Constants.TILE_SIZE, new_pos.y * Constants.TILE_SIZE);
         }
     }
-
+    /**
+     * Called on player, applies the powerup's effect onto the player.
+     * @param p player entity to be affected.
+     * */
     public void applyPowUp(Player p){
         switch (type){
             case 0: // health refill
@@ -124,6 +127,10 @@ public class Powerup extends Entity implements CollisionCallBack {
 
     }
 
+    /**
+     * Called upon collection by the player.
+     * Marks powerup for type and position change in next frame.
+     * */
     @Override
     public void BeginContact(CollisionInfo info) {
         if (info.b instanceof Player) {

@@ -48,6 +48,8 @@ public class PlayerController extends Component {
 
     /**
      * Reads keyboard and mouse inputs, moving and shooting as required.
+     * This function tracks spacebar presses to shoot in the direction of the ship.
+     * GameScreen tracks mouse clicks to shoot in direction of the mouse, ignoring on screen button presses.
      */
     @Override
     public void update() {
@@ -167,7 +169,7 @@ public class PlayerController extends Component {
     }
 
     /**
-     * Sets all powerup related flags to false and restores speed to setting specified in the JSON file.
+     * Sets all powerup related flags to false and restores speed to current speed upgrade level.
      * */
     public void stopPowerups(){
         player.setPoweredUp(false);

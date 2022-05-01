@@ -1,5 +1,6 @@
 package com.mygdx.tests;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Components.ComponentEvent;
 import com.mygdx.game.Components.Pirate;
@@ -51,13 +52,15 @@ public class CombatTests {
             GameManager.CreateNPCShip(2); // the "enemy" entity for tests
             GameManager.CreateNPCShip(1); // the "ally" entity for tests
         }
+        if (GameManager.getColleges().isEmpty()){
+            GameManager.CreateCollege(2);
+        }
     }
     @After
     public void cleanEnv(){
         ResourceManager.deepClean();
-        GameManager.getShips().remove(0);
-        GameManager.getShips().remove(0);
-        GameManager.getShips().remove(0);
+        GameManager.getShips().clear();
+        GameManager.getColleges().clear();
     }
 
     @Test
@@ -241,17 +244,28 @@ public class CombatTests {
         int ammo_init = p.getAmmo();
         int plunder_init = p.getPlunder();
         NPCShip npc = (NPCShip) GameManager.getShips().get(1);
-        for(int d = 0; d < 11; d ++) {
+        npc.getComponent(Pirate.class).takeDamage(90f); // next shot will kill the npc
             GameManager.shoot(p, npc.getPosition().sub(npc.getPosition()).scl(100f));
             for (int i = 0; i < 2000; i++) {
                 npc.update();
                 PhysicsManager.update();
             }
             p.update();
-        }
         assertFalse("NPC did not register as dead after having 0 hp!", npc.isAlive());
         assertTrue("Player did not gain plunder!", plunder_init < p.getPlunder());
         assertTrue("Killed npc did not travel offscreen!",npc.getPosition().x >= 10000f && npc.getPosition().y >= 10000f);
+    }
+
+    @Test
+    public void testEnemyCollegeHasDefender(){
+        College c = GameManager.getColleges().get(0);
+        boolean hasDefender = false;
+        for (Building b : c.getBuildings()){
+            if (b.isDefender()){
+                hasDefender = true;
+            }
+        }
+        assertTrue("Enemy college doesnt have a defender!", hasDefender);
     }
 }
 

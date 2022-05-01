@@ -61,7 +61,6 @@ public class MenuScreen extends Page {
         loadData.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Loading Data...");
 //                Loading JSON to working memory
                 String userprofile = System.getenv("USERPROFILE");
                 String fileLoc = userprofile + "\\saved_data.json";
@@ -76,7 +75,6 @@ public class MenuScreen extends Page {
 //                Set the loaded flag to true and pass these variables to the game
                     GameManager.load_game(factions, ships, colleges, quests, base);
 //                Do all the loading before this point.
-                    System.out.println("Load Complete.");
                     parent.setScreen(parent.game);
                 } catch (SerializationException e) {
                     System.out.println("The System Cannot find the File Specified.");

@@ -62,6 +62,8 @@ public class Building extends Entity implements CollisionCallBack {
         return !isFlag;
     }
 
+    public boolean isDefender(){return isDefender;}
+
     /**
      * Creates a building with the given name at the specified location.
      *
@@ -79,7 +81,9 @@ public class Building extends Entity implements CollisionCallBack {
         rb.setCallback(this);
         addComponent(rb);
     }
-
+    /**
+     * Marks building as one that can shoot at player and adds a trigger for the player entering within aggro range.
+     * */
     public void makeDefender(){
         isDefender = true;
         cannonTimer = (int) (3f / EntityManager.getDeltaTime());
@@ -104,6 +108,12 @@ public class Building extends Entity implements CollisionCallBack {
         red.hide();
         green.hide();
     }
+
+    /**
+     * Called on every frame, does nothing for non - defenders (buildings incapable of shooting)
+     * For defenders, waits 3 seconds and shoots at player if within agro range.
+     * For defenders, updates healthbar to reflect current health level.
+     * */
     @Override
     public void update(){
         if (getComponent(Pirate.class).isAlive() && isDefender){
@@ -139,7 +149,10 @@ public class Building extends Entity implements CollisionCallBack {
             green.hide();
         }
     }
-
+    /**
+     * Used on reset of the game screen.
+     * Sets health back to 100 and, if destroyed, changes the sprite back to undestroyed version
+     * */
     public void revive(){
         if (isFlag) {
             return;
@@ -170,7 +183,9 @@ public class Building extends Entity implements CollisionCallBack {
     }
 
     /**
-     * Destroys the building and marks cannonball for removal.
+     * If the building is not a defender (doesnt shoot at player), kills the building and the cannonball that hit it.
+     * Otherwise harms the building and kills the cannonball
+     * For defenders, player entering the aggro range makes the building add it as a target.
      *
      * @param info CollisionInfo container
      */
@@ -199,7 +214,10 @@ public class Building extends Entity implements CollisionCallBack {
             cannonTimer = (int) (4f / EntityManager.getDeltaTime());
         }
     }
-
+    /**
+     * For defender buildings, the player leaving the aggro range removes the target from the building's list of targets
+     * @param info CollisionInfo container
+     * */
     @Override
     public void ExitTrigger(CollisionInfo info) {
         if (info.fB.isSensor() && info.a instanceof Player){
