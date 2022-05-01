@@ -1,5 +1,5 @@
 # How-Hard-Can-It-Be
-![Team website link](https://jds572.github.io/Kroojel.github.io/)
+[Team website link](https://jds572.github.io/Kroojel.github.io/)
 
 [![pre-release](https://github.com/rgbalex/How-Hard-Can-It-Be/actions/workflows/gradle-publish.yml/badge.svg?branch=main)](https://github.com/rgbalex/How-Hard-Can-It-Be/actions/workflows/gradle-publish.yml)
 
