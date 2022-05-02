@@ -256,16 +256,5 @@ public class CombatTests {
         assertTrue("Killed npc did not travel offscreen!",npc.getPosition().x >= 10000f && npc.getPosition().y >= 10000f);
     }
 
-    @Test
-    public void testEnemyCollegeHasDefender(){
-        College c = GameManager.getColleges().get(0);
-        boolean hasDefender = false;
-        for (Building b : c.getBuildings()){
-            if (b.isDefender()){
-                hasDefender = true;
-            }
-        }
-        assertTrue("Enemy college doesnt have a defender!", hasDefender);
-    }
 }
 

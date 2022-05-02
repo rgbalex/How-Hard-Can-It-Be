@@ -72,9 +72,6 @@ public class Pirate extends Component {
         return currentPlunder;
     }
 
-    public int getPoints() { return points; }
-
-    public void addPoints(int smlPoint) { points += smlPoint;}
 
     public Faction getFaction() {
         return GameManager.getFaction(factionId);
@@ -183,9 +180,6 @@ public class Pirate extends Component {
         return ammo;
     }
 
-    public int targetCount() {
-        return targets.size();
-    }
 
     public QueueFIFO<Ship> getTargets() {
         return targets;

@@ -52,6 +52,32 @@ public class Powerup extends Entity implements CollisionCallBack {
         rb.setCallback(this);
         addComponents(t, r, rb);
     }
+    /**
+     * Powerup constructor that does not depend on a tileMap existing, used for testing.
+     * @param type powerup type
+     * @param x,y coordinates of where the powerup shall be placed.
+     * */
+    public Powerup(int type, float x, float y){
+        super();
+        this.type = type;
+        justCollected = false;
+        Transform t = new Transform();
+        Vector2 pos = new Vector2(x, y); //
+        t.setPosition(
+                pos.x * Constants.TILE_SIZE,
+                pos.y * Constants.TILE_SIZE
+        );
+        t.setScale(0.5f, 0.5f);
+        Renderable r = new Renderable(
+                ResourceManager.getId(
+                        "upgrades_powerups.txt"),
+                "powerup-" + type,
+                RenderLayer.Transparent
+        );
+        RigidBody rb = new RigidBody(PhysicsBodyType.Static, r, t, false);
+        rb.setCallback(this);
+        addComponents(t, r, rb);
+    }
 
     public void place(float x, float y){
 

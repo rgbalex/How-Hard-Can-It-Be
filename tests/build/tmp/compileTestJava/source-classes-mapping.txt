@@ -6,7 +6,9 @@ com/mygdx/tests/MovementTests.java
  com.mygdx.tests.MovementTests
 com/mygdx/tests/SaveLoadTests.java
  com.mygdx.tests.SaveLoadTests
-com/mygdx/tests/UpgradePowUpTests.java
- com.mygdx.tests.UpgradePowUpTests
 com/mygdx/tests/CombatTests.java
  com.mygdx.tests.CombatTests
+com/mygdx/tests/CollegeBuildingTests.java
+ com.mygdx.tests.CollegeBuildingTests
+com/mygdx/tests/UpgradePowUpTests.java
+ com.mygdx.tests.UpgradePowUpTests

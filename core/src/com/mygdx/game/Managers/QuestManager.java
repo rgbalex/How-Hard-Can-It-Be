@@ -76,7 +76,7 @@ public class QuestManager {
         Integer choice = -1;
         float x = Utilities.randomChoice(locations, choice);
         float y;
-        assert (choice > -1);
+        //assert (choice > -1);
         if (choice == locations.size() - 1) {
             y = x;
             x = locations.get(choice - 1);
@@ -100,7 +100,7 @@ public class QuestManager {
         Integer choice = -1;
         float x = Utilities.randomChoice(locations, choice);
         float y;
-        assert (choice > -1);
+        //assert (choice > -1);
         if (choice == locations.size() - 1) {
             y = x;
             x = locations.get(choice - 1);
