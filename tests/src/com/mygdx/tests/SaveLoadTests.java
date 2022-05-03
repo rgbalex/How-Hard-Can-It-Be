@@ -16,7 +16,11 @@ import org.junit.runner.RunWith;
 import static com.mygdx.utils.Constants.INIT_CONSTANTS;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
+/**
+ * This class tests the save and load functionality of the game.
+ * It has been modified to run on github actions as the server does not permit writing files.
+ * Therefore, the test verifies that the saveManager's JSON representation of the game state is correct just before it writes.
+ * */
 @RunWith(GdxTestRunner.class)
 public class SaveLoadTests {
     @Before

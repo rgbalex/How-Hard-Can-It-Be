@@ -391,7 +391,7 @@ public class GameScreen extends Page {
             }
 
             healthLabel.setText(String.valueOf(p.getHealth()));
-            dosh.setText(String.valueOf(p.getComponent(Pirate.class).getPlunder()));
+            dosh.setText(String.valueOf(p.getComponent(Pirate.class).getCurrentPlunder()));
             ammo.setText(String.valueOf(p.getAmmo()));
             if (p.isPoweredUp()) {
                 if (!current_powup.isVisible()) {

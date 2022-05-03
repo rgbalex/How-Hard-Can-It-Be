@@ -13,21 +13,21 @@ import com.mygdx.game.Physics.PhysicsBodyType;
 import com.mygdx.utils.Constants;
 
 import java.util.Random;
-
+/** A collectable powerup that appears on the playing field. (added for assesment 2)
+ *
+ * Can be of 5 different types:
+ *   0 - health repair - resets player's health to full (sprite : hammer)
+ *   1 - ammo refill - resets player's ammo to full (sprite : 3 cannonballs)
+ *   2 - bad weather resistance - makes player unaffected by bad weather for 10 seconds (sprite : xxx bottle)
+ *   3 - invincibility - makes player unaffected by enemy cannonballs/seamonsters/bad weather for 10 seconds (sprite : mario star)
+ *   4 - increased speed - doubles the player's speed for 10 seconds (sprite : ship with arrow overlayed)
+ * Like cannonballs, there is a fixed amount of powerups created on startup.
+ * Upon contact with player, the powerup moves offscreen until it is placed somewhere again.
+ * Powerups cannot be compounded (e.g can't experience invincibility and increased speed),
+ * but health and ammo refills work even when under the effect of another powerup.
+ * */
 public class Powerup extends Entity implements CollisionCallBack {
-    /** A collectable powerup that appears on the playing field.
-    *
-    * Can be of 5 different types:
-    *   0 - health repair - resets player's health to full (sprite : hammer)
-    *   1 - ammo refill - resets player's ammo to full (sprite : 3 cannonballs)
-    *   2 - bad weather resistance - makes player unaffected by bad weather for 10 seconds (sprite : xxx bottle)
-    *   3 - invincibility - makes player unaffected by enemy cannonballs/seamonsters/bad weather for 10 seconds (sprite : mario star)
-    *   4 - increased speed - doubles the player's speed for 10 seconds (sprite : ship with arrow overlayed)
-    * Like cannonballs, there is a fixed amount of powerups created on startup.
-     * Upon contact with player, the powerup moves offscreen until it is placed somewhere again.
-     * Powerups cannot be compounded (e.g can't experience invincibility and increased speed),
-     * but health and ammo refills work even when under the effect of another powerup.
-    * */
+
     private int type;
     private boolean justCollected;
     private final Random rand = new Random();

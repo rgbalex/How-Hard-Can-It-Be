@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 
 import static com.mygdx.utils.Constants.INIT_CONSTANTS;
 import static org.junit.Assert.assertTrue;
-
 @RunWith(GdxTestRunner.class)
 public class UpgradePowUpTests {
     @Before
