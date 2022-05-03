@@ -694,7 +694,7 @@ public class GameScreen extends Page {
         save.addListener(new ChangeListener(){
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                s = new SaveManager(health_level, ammo_level, speed_level, damage_level, timer_points);
+                s = new SaveManager(health_level, ammo_level, speed_level, damage_level, timer_points, "");
             }
         });
         TextButton mainMenu = new TextButton("Main Menu", parent.skin);

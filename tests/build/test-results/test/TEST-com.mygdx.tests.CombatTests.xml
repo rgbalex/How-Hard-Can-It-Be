@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mygdx.tests.CombatTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2022-05-03T17:03:08" hostname="SURFACEBOOK" time="6.345">
+<testsuite name="com.mygdx.tests.CombatTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2022-05-03T17:19:51" hostname="TUF-LEG" time="4.027">
   <properties/>
-  <testcase name="testLongboiFacesPlayer" classname="com.mygdx.tests.CombatTests" time="0.047"/>
-  <testcase name="testPlayerEarnsPlunder" classname="com.mygdx.tests.CombatTests" time="0.666"/>
-  <testcase name="testPlayerTakesDamage" classname="com.mygdx.tests.CombatTests" time="0.043"/>
-  <testcase name="testCannonBallHurtsPlayer" classname="com.mygdx.tests.CombatTests" time="2.334"/>
-  <testcase name="testEggballHurtsPlayer" classname="com.mygdx.tests.CombatTests" time="2.992"/>
-  <testcase name="testLongboiPoisonWorks" classname="com.mygdx.tests.CombatTests" time="0.066"/>
-  <testcase name="testCannonBallMoves" classname="com.mygdx.tests.CombatTests" time="0.042"/>
-  <testcase name="testPlayerDies" classname="com.mygdx.tests.CombatTests" time="0.032"/>
+  <testcase name="testLongboiFacesPlayer" classname="com.mygdx.tests.CombatTests" time="0.029"/>
+  <testcase name="testPlayerEarnsPlunder" classname="com.mygdx.tests.CombatTests" time="0.419"/>
+  <testcase name="testPlayerTakesDamage" classname="com.mygdx.tests.CombatTests" time="0.026"/>
+  <testcase name="testCannonBallHurtsPlayer" classname="com.mygdx.tests.CombatTests" time="1.476"/>
+  <testcase name="testEggballHurtsPlayer" classname="com.mygdx.tests.CombatTests" time="1.86"/>
+  <testcase name="testLongboiPoisonWorks" classname="com.mygdx.tests.CombatTests" time="0.046"/>
+  <testcase name="testCannonBallMoves" classname="com.mygdx.tests.CombatTests" time="0.028"/>
+  <testcase name="testPlayerDies" classname="com.mygdx.tests.CombatTests" time="0.023"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

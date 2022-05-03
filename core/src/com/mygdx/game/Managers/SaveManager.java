@@ -14,7 +14,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class SaveManager{
-    public SaveManager(int health_level, int ammo_level, int speed_level, int damage_level, int timer_points) {
+    public SaveManager(int health_level, int ammo_level, int speed_level, int damage_level, int timer_points, String filename) {
 //        Data Collection
         SaveData data = new SaveData();
         Player p = GameManager.getPlayer();
@@ -107,8 +107,14 @@ public class SaveManager{
 //        Data Handling
         Json jsonObject = new Json();
         String output = jsonObject.prettyPrint(data);
-        String userprofile = System.getenv("USERPROFILE");
-        String fileLoc = userprofile + "\\saved_data.json";
+        String fileLoc;
+        if (filename == "") {
+            String userprofile = System.getenv("USERPROFILE");
+            fileLoc = userprofile + "\\saved_data.json";
+        }
+        else {
+            fileLoc = "saved_data.json";
+        }
         try (PrintWriter out = new PrintWriter(fileLoc)) {
             out.println(output);
         } catch (FileNotFoundException e) {

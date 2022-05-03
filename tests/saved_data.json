@@ -1,0 +1,221 @@
+{
+factions: [
+	{
+		name: Halifax
+		shipColour: light-blue
+		position: {
+			x: 1056
+			y: 1120
+		}
+		spawnPos: {
+			x: 608
+			y: 1056
+		}
+		id: 1
+	}
+	{
+		name: Constantine
+		shipColour: pink
+		position: {
+			x: 1632
+			y: 1632
+		}
+		spawnPos: {
+			x: 1696
+			y: 1472
+		}
+		id: 2
+	}
+	{
+		name: Langwidth
+		shipColour: yellow
+		position: {
+			x: 1088
+			y: 2304
+		}
+		spawnPos: {
+			x: 1120
+			y: 2080
+		}
+		id: 3
+	}
+	{
+		name: Goodrick
+		shipColour: green
+		position: {
+			x: 2400
+			y: 2464
+		}
+		spawnPos: {
+			x: 2496
+			y: 2208
+		}
+		id: 4
+	}
+	{
+		name: Derwent
+		shipColour: dark-blue
+		position: {
+			x: 2432
+			y: 736
+		}
+		spawnPos: {
+			x: 2688
+			y: 640
+		}
+		id: 5
+	}
+]
+ships: [
+	{
+		position: {
+			x: 800
+			y: 800
+		}
+		faction: 0
+		colour: light-blue
+		type: Player
+	}
+	{
+		position: {
+			x: 800
+			y: 800
+		}
+		faction: 1
+		colour: pink
+		type: NPC
+	}
+	{
+		position: {
+			x: 800
+			y: 800
+		}
+		faction: 0
+		colour: light-blue
+		type: NPC
+	}
+]
+colleges: [
+	{
+		factionID: 0
+		destroyed: false
+	}
+	{
+		factionID: 1
+		destroyed: false
+	}
+	{
+		factionID: 2
+		destroyed: false
+	}
+	{
+		factionID: 3
+		destroyed: false
+	}
+	{
+		factionID: 4
+		destroyed: false
+	}
+]
+quests: [
+	{
+		type: LocateQuest
+		name: Find a chest
+		description: South East
+		reward: 100
+		completed: false
+		loc: {
+			x: 2720
+			y: 640
+		}
+		radius: 25600
+		target: null
+	}
+	{
+		type: LocateQuest
+		name: Find a chest
+		description: South East
+		reward: 100
+		completed: false
+		loc: {
+			x: 2464
+			y: 640
+		}
+		radius: 25600
+		target: null
+	}
+	{
+		type: LocateQuest
+		name: Find a chest
+		description: South West
+		reward: 100
+		completed: false
+		loc: {
+			x: 960
+			y: 640
+		}
+		radius: 25600
+		target: null
+	}
+	{
+		type: LocateQuest
+		name: Find a chest
+		description: South East
+		reward: 100
+		completed: false
+		loc: {
+			x: 1696
+			y: 640
+		}
+		radius: 25600
+		target: null
+	}
+	{
+		type: LocateQuest
+		name: Find a chest
+		description: South West
+		reward: 100
+		completed: false
+		loc: {
+			x: 800
+			y: 640
+		}
+		radius: 25600
+		target: null
+	}
+	{
+		type: KillQuest
+		name: Kill the college
+		description: Derwent
+		reward: 100
+		completed: false
+		loc: null
+		radius: 0
+		target: null
+	}
+	{
+		type: KillQuest
+		name: Kill the college
+		description: Langwidth
+		reward: 100
+		completed: false
+		loc: null
+		radius: 0
+		target: null
+	}
+	{
+		type: KillDuckQuest
+		name: Destroy Longboi!
+		description: ""
+		reward: 150
+		completed: false
+		loc: null
+		radius: 0
+		target: null
+	}
+]
+health: 100
+cannon_balls: 50
+x: 800
+y: 800
+}
