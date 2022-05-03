@@ -121,14 +121,24 @@ quests: [
 	{
 		type: LocateQuest
 		name: Find a chest
-		description: South East
+		description: South West
 		reward: 100
 		completed: false
 		loc: {
-			x: 2720
+			x: 640
 			y: 640
 		}
 		radius: 25600
+		target: null
+	}
+	{
+		type: KillQuest
+		name: Kill the college
+		description: Langwidth
+		reward: 100
+		completed: false
+		loc: null
+		radius: 0
 		target: null
 	}
 	{
@@ -145,48 +155,9 @@ quests: [
 		target: null
 	}
 	{
-		type: LocateQuest
-		name: Find a chest
-		description: South West
-		reward: 100
-		completed: false
-		loc: {
-			x: 960
-			y: 640
-		}
-		radius: 25600
-		target: null
-	}
-	{
-		type: LocateQuest
-		name: Find a chest
-		description: South East
-		reward: 100
-		completed: false
-		loc: {
-			x: 1696
-			y: 640
-		}
-		radius: 25600
-		target: null
-	}
-	{
-		type: LocateQuest
-		name: Find a chest
-		description: South West
-		reward: 100
-		completed: false
-		loc: {
-			x: 800
-			y: 640
-		}
-		radius: 25600
-		target: null
-	}
-	{
 		type: KillQuest
 		name: Kill the college
-		description: Derwent
+		description: Goodrick
 		reward: 100
 		completed: false
 		loc: null
@@ -196,7 +167,30 @@ quests: [
 	{
 		type: KillQuest
 		name: Kill the college
-		description: Langwidth
+		description: Constantine
+		reward: 100
+		completed: false
+		loc: null
+		radius: 0
+		target: null
+	}
+	{
+		type: LocateQuest
+		name: Find a chest
+		description: South East
+		reward: 100
+		completed: false
+		loc: {
+			x: 2560
+			y: 640
+		}
+		radius: 25600
+		target: null
+	}
+	{
+		type: KillQuest
+		name: Kill the college
+		description: Derwent
 		reward: 100
 		completed: false
 		loc: null

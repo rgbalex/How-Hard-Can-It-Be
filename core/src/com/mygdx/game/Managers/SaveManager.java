@@ -14,6 +14,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class SaveManager{
+    public String output;
     public SaveManager(int health_level, int ammo_level, int speed_level, int damage_level, int timer_points, String filename) {
 //        Data Collection
         SaveData data = new SaveData();
@@ -106,7 +107,7 @@ public class SaveManager{
 
 //        Data Handling
         Json jsonObject = new Json();
-        String output = jsonObject.prettyPrint(data);
+        output = jsonObject.prettyPrint(data);
         String fileLoc;
         if (filename == "") {
             String userprofile = System.getenv("USERPROFILE");

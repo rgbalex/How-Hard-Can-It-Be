@@ -56,14 +56,6 @@ public class SaveLoadTests {
     }
 
     @Test
-    public void testWritesToFile(){
-        SaveManager s = new SaveManager(0, 0, 0, 0, 0, "a");
-        String userprofile = System.getenv("USERPROFILE");
-        String fileLoc = userprofile + "\\saved_data.json";
-        assertTrue("No save file has been created!", Gdx.files.internal(fileLoc).exists());
-    }
-
-    @Test
     public void testStoresStateProperly(){
         JsonReader json = new JsonReader();
         Player p = GameManager.getPlayer();
@@ -97,7 +89,7 @@ public class SaveLoadTests {
         }
         for (JsonValue college : colleges){
             int faction = college.getInt("factionID");
-            assertTrue("College of faction " + faction + " was registered as destroyed even though it wasnt!", !college.getBoolean("destroyed"));
+            assertFalse("College of faction " + faction + " was registered as destroyed even though it wasnt!", college.getBoolean("destroyed"));
         }
         boolean duckQuestExists = false;
         for (JsonValue quest : quests){
