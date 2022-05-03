@@ -22,10 +22,12 @@ import static com.mygdx.utils.Constants.BUILDING_SCALE;
 public class Building extends Entity implements CollisionCallBack {
     private String buildingName;
     private static int atlas_id;
+    //The following fields and methods modifying them have been added for assesment 2:
     private boolean isFlag;
     private boolean isDefender; // if true, building acts as defender for its college (shoots and has health instead of insta dying)
     private int cannonTimer;
-    private Renderable green, red;
+    private Renderable green, red; // healthbar components
+    //---------------------------------------------------------
 
     Building() {
         super();

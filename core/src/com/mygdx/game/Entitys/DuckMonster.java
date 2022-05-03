@@ -20,7 +20,7 @@ import com.mygdx.game.Physics.CollisionInfo;
 import com.mygdx.game.Physics.PhysicsBodyType;
 import com.mygdx.utils.Utilities;
 /**
- * Duck monster entity (inspired by longboi)
+ * Duck monster entity (inspired by longboi) added for assesment 2.
  * Spawns as part of quest
  * Shoots egg cannonballs at player and has a poisonous area around it that harms the player
  * Doesnt move, but turns to face the player
@@ -33,7 +33,7 @@ public class DuckMonster extends Entity implements CollisionCallBack {
     private boolean isActive; // if 'active', it is fighting the player as part of a quest, otherwise it is offscreen
     private Renderable poison; //green circle, which hurts the player upon entering (duck lives on campus lake so is poisonous af from the water)
     private int cannonTimer;
-    private Renderable green, red; // healthbar
+    private Renderable green, red; // healthbar components
     private Renderable sprite;
     private int poisonTimer; // to damage player if they are in poison range
     private boolean poisoning;

@@ -41,11 +41,9 @@ public class UpgradePowUpTests {
         ResourceManager.loadAssets();
         INIT_CONSTANTS();
         PhysicsManager.Initialize(false);
-        if(GameManager.getShips().isEmpty()) {
-            GameManager.CreatePlayer(); // the player entity for tests
-            GameManager.CreateNPCShip(2); // the "enemy" entity for tests
-            GameManager.CreateNPCShip(1); // the "ally" entity for tests
-        }
+        GameManager.CreatePlayer(); // the player entity for tests
+        GameManager.CreateNPCShip(2); // the "enemy" entity for tests
+        GameManager.CreateNPCShip(1); // the "ally" entity for tests
     }
     @After
     public void cleanEnv(){

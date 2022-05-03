@@ -24,10 +24,10 @@ import static com.mygdx.utils.Constants.HALF_DIMENSIONS;
  */
 public class PlayerController extends Component {
     private Player player;
-    private float current_speed;
-    private float base_speed; // when not powered up
-    private int powerupTimer;
-    private final Vector2 modifier = new Vector2(-16,-24);
+    private float current_speed; // added for assesment 2, current speed of the player
+    private float base_speed; // speed when not powered up (assesment 2)
+    private int powerupTimer; // ensures powerups stop acting within a time period (assesment 2)
+    private final Vector2 modifier = new Vector2(-16,-24); // speed decrease during bad weather (assesment 2)
     public PlayerController() {
         super();
         powerupTimer = 0;
@@ -134,6 +134,8 @@ public class PlayerController extends Component {
         }
         return dir;
     }
+
+    //The following methods implement powerups as outlined in assesment 2:
     /**
      * Multiplies speed by a given amount for a given amount of time, then undoes the speed gain
      *
@@ -185,5 +187,5 @@ public class PlayerController extends Component {
     public void setBase_speed(float newSpeed){base_speed = newSpeed;}
     public float getBase_speed(){return base_speed;}
     public float getSpeed(){return current_speed;}
-
+    //----------------------------------------------------------------------------------------------------
 }

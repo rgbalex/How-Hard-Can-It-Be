@@ -2,7 +2,10 @@ package com.mygdx.game.Components;
 
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Quests.Quest;
-
+/**
+ * This class has been added for assesment 2.
+ * It is used to store data about a quest for future reloading.
+ * */
 public class DataQuest {
     public String type;
     public String name;

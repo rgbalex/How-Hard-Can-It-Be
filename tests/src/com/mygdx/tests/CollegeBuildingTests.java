@@ -1,6 +1,7 @@
 package com.mygdx.tests;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Entitys.Building;
 import com.mygdx.game.Entitys.College;
 import com.mygdx.game.Entitys.Player;
@@ -39,14 +40,10 @@ public class CollegeBuildingTests {
         ResourceManager.loadAssets();
         INIT_CONSTANTS();
         PhysicsManager.Initialize(false);
-        if(GameManager.getShips().isEmpty()) {
-            GameManager.CreatePlayer(); // the player entity for tests
-            GameManager.CreateNPCShip(2); // the "enemy" entity for tests
-            GameManager.CreateNPCShip(1); // the "ally" entity for tests
-        }
-        if (GameManager.getColleges().isEmpty()){
-            GameManager.CreateCollege(2);
-        }
+        GameManager.CreatePlayer(); // the player entity for tests
+        GameManager.CreateNPCShip(2); // the "enemy" entity for tests
+        GameManager.CreateNPCShip(1); // the "ally" entity for tests
+        GameManager.CreateCollege(2);
     }
     @After
     public void cleanEnv(){
@@ -79,8 +76,11 @@ public class CollegeBuildingTests {
         defender.update();
         int health_init = defender.getHealth();
         Player p = GameManager.getPlayer();
+        Vector2 pos = defender.getComponent(Transform.class).getPosition();
+        p.getComponent(Transform.class).setPosition(pos.x + 100f, pos.y + 100f);
+        System.out.println(defender.getComponent(Transform.class).getPosition());
         p.shoot(defender.getComponent(Transform.class).getPosition().sub(p.getPosition()).scl(100f));
-        for (int i = 0; i < 3000; i++){
+        for (int i = 0; i < 5000; i++){
             defender.update();
             PhysicsManager.update();
         }

@@ -24,9 +24,11 @@ public class Pirate extends Component {
     protected boolean isAlive;
     private int health;
     private int ammo;
+    //The following fields and their getters/setters have been added for assesment 2:
     private float attackDmg;
     private int maxAmmo;
     private int maxHealth;
+    //----------------------------------------------------
 
     /**
      * The enemy that is being targeted by the AI.
@@ -165,7 +167,7 @@ public class Pirate extends Component {
     }
 
     /**
-     * Kill its self
+     * Marks component (and parent entity) as killed.
      */
     public void kill() {
         health = 0;

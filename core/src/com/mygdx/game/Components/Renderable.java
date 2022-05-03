@@ -13,7 +13,7 @@ import com.mygdx.game.Managers.ResourceManager;
 public class Renderable extends Component {
     protected Sprite sprite;
     private boolean isVisible;
-    private Vector2 offset; // specifies the offset of this renderable from parent's rigid body (used for healthbars)
+    private Vector2 offset; // specifies the offset of this renderable from parent's rigid body (used for healthbars) (added for assesment 2)
 
     /**
      * Called in other constructors, loads no textures by itself.
@@ -105,9 +105,6 @@ public class Renderable extends Component {
         a.setV2(s.getV2());
     }
 
-    public boolean isVisible() {
-        return isVisible;
-    }
 
     public void show() {
         isVisible = true;
@@ -117,10 +114,8 @@ public class Renderable extends Component {
         isVisible = false;
     }
 
-    public void toggleVisibility() {
-        isVisible = !isVisible;
-    }
     /**
+     * Developed for assesment 2
      * Changes size to the width and height specified.
      * @param w new width of renderable
      * @param h new height of renderable
@@ -130,6 +125,7 @@ public class Renderable extends Component {
     }
 
     /**
+     * Developed for assesment 2
      * Normally, the renderables "attach" to the center of their rigid bodies.
      * This function allows to change renderable position with regards to a rigid body it represents.
      * Allows for things like healthbars, names, etc to be rendered near but not directly over rigid body.

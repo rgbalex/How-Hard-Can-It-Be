@@ -22,7 +22,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
     private static float speed;
     private boolean toggleLife;
     private int life_remaining;
-    private Entity shooter;
+    private Entity shooter; // changed to Entity for assesment 2, allows duckMonsters to shoot
 
     public CannonBall() {
         super(3);
@@ -79,7 +79,7 @@ public class CannonBall extends Entity implements CollisionCallBack {
      */
     public void fire(Vector2 pos, Vector2 dir, Entity sender) {
         shooter = sender;
-        if (sender instanceof DuckMonster){
+        if (sender instanceof DuckMonster){ // for assesment 2, changes sprite for cannonballs shot by duck monster
             getComponent(Renderable.class).setTexture(ResourceManager.getSprite(ResourceManager.getId("Eggball.txt"), "egg"));
         }
         else{

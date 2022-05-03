@@ -1,8 +1,10 @@
 package com.mygdx.tests;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.mygdx.game.Components.RigidBody;
 import com.mygdx.game.Entitys.Player;
+import com.mygdx.game.Managers.GameManager;
 import com.mygdx.game.Managers.PhysicsManager;
 import com.mygdx.game.Managers.ResourceManager;
 import org.junit.*;
@@ -37,10 +39,16 @@ public class MovementTests {
         ResourceManager.loadAssets();
         INIT_CONSTANTS();
         PhysicsManager.Initialize(false);
+        GameManager.CreatePlayer(); // the player entity for tests
+        GameManager.CreateNPCShip(2); // the "enemy" entity for tests
+        GameManager.CreateNPCShip(1); // the "ally" entity for tests
+        GameManager.CreateCollege(2);
     }
     @After
     public void cleanEnv(){
         ResourceManager.deepClean();
+        GameManager.getShips().clear();
+        GameManager.getColleges().clear();
     }
     @Test
     public void testMovesNorth(){ testMoveDirection("-up");}
@@ -49,13 +57,15 @@ public class MovementTests {
     @Test
     public void testMovesEast(){testMoveDirection("-right");}
     @Test
-    public void testMovesWest(){testMoveDirection("-left");}
+    public void testMovesWest(){ testMoveDirection("-left");}
     @Test
     public void testMovesNorthEast(){testMoveDirection("-ur");}
     @Test
     public void testMovesNorthWest(){testMoveDirection("-ul");}
     @Test
-    public void testMovesSouthEast(){testMoveDirection("-dr");}
+    public void testMovesSouthEast(){
+        testMoveDirection("-dr");
+    }
     @Test
     public void testMovesSouthWest(){testMoveDirection("-dl");}
 
@@ -76,15 +86,17 @@ public class MovementTests {
         shipDirections.put("-dl", new Vector2(-100f, -100f));
 
         Vector2 moveDir = (Vector2) shipDirections.get(dir);
-        Player player = new Player();
+        Player player = GameManager.getPlayer();
         RigidBody player_body = player.getComponent(RigidBody.class);
         Vector2 start = player.getPosition().cpy();
+        player.update();
         player_body.setVelocity(moveDir);
         player_body.update();
         PhysicsManager.update();
-        player_body.setVelocity(moveDir);
-        player_body.update();
-        PhysicsManager.update();
+//        player.update();
+//        //player_body.setVelocity(moveDir);
+//        player_body.update();
+//        PhysicsManager.update();
         Vector2 delta = player.getPosition().cpy().sub(start);
         delta = new Vector2(delta.x * moveDir.x, delta.y * moveDir.y);
         //Check that ship has moved in the correct direction:
