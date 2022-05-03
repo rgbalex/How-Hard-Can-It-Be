@@ -15,6 +15,7 @@ import com.mygdx.game.Faction;
 import com.mygdx.game.Quests.KillDuckQuest;
 import com.mygdx.game.Quests.KillQuest;
 import com.mygdx.game.Quests.LocateQuest;
+import com.mygdx.game.UI.GameScreen;
 import com.mygdx.utils.QueueFIFO;
 import com.mygdx.utils.Utilities;
 
@@ -124,6 +125,11 @@ public final class GameManager {
             p.setCannonBalls(0);
         }
         ships.add(p);
+        Vector2 pos = new Vector2(base.getFloat("x"), base.getFloat("y"));
+        p.getComponent(Transform.class).setPosition(pos);
+//        Give the players their upgrades
+//        GameScreen.loadPlayerUpgrades();
+
 
 //        Create ships from load
         int counter = 0;

@@ -725,6 +725,41 @@ public class GameScreen extends Page {
         actors.add(pauseScreen);
         pauseScreen.setVisible(false);
     }
+
+    public void loadPlayerUpgrades(int _damage_level, int _ammo_level, int _speed_level, int _health_level) {
+        damage_level = _damage_level;
+        damage_upg_bar.setDrawable(upgrade_bar_components[damage_level]);
+        Pirate p = GameManager.getPlayer().getComponent(Pirate.class);
+        p.setAttackDmg(p.getDmg() + (damage_level*20f));
+        p.spendPlunder(50);
+        dosh.setText(p.getCurrentPlunder());
+
+        ammo_level = _ammo_level;
+        ammo_upg_bar.setDrawable(upgrade_bar_components[ammo_level]);
+        p.setMaxAmmo(p.getMaxAmmo() + (ammo_level * 20));
+        p.setAmmo(p.getMaxAmmo());
+        ammo.setText(p.getAmmo());
+        p.spendPlunder(50);
+        dosh.setText(p.getCurrentPlunder());
+
+        speed_level = _speed_level;
+        speed_upg_bar.setDrawable(upgrade_bar_components[speed_level]);
+        PlayerController _p = GameManager.getPlayer().getComponent(PlayerController.class);
+        _p.setBase_speed(_p.getBase_speed() +  (speed_level * 10f));
+        _p.setSpeed(_p.getBase_speed());
+        GameManager.getPlayer().getComponent(Pirate.class).spendPlunder(50);
+        dosh.setText(GameManager.getPlayer().getComponent(Pirate.class).getCurrentPlunder());
+
+        health_level = _health_level;
+        health_upg_bar.setDrawable(upgrade_bar_components[health_level]);
+        p.setMaxHealth(p.getMaxHealth() + (health_level * 20));
+        p.setHealth(p.getMaxHealth());
+        healthLabel.setText(p.getHealth());
+        p.spendPlunder(50);
+        dosh.setText(p.getCurrentPlunder());
+    }
+
+
     /**
      * Returns a price tag of 50 coins.
      * */
