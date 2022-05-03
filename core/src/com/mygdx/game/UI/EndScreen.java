@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.mygdx.game.Components.Text;
 import com.mygdx.game.Entitys.Player;
 import com.mygdx.game.Managers.GameManager;
 import com.mygdx.game.Managers.ResourceManager;
