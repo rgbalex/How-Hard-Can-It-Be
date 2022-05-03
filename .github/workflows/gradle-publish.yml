@@ -25,7 +25,6 @@ jobs:
         uses: dorny/test-reporter@v1
         if: success() || failure()    # run this step even if previous step failed
         with:
-        with:
           name: test-results
           path: "/tests/build/test-results/*.xml"
 
