@@ -61,9 +61,8 @@ public class SaveLoadTests {
         Player p = GameManager.getPlayer();
         NPCShip enemy = (NPCShip)GameManager.getShips().get(2);
         NPCShip ally = (NPCShip)GameManager.getShips().get(2);
-        String userprofile = System.getenv("USERPROFILE");
-        String fileLoc = userprofile + "\\saved_data.json";
-        JsonValue base = json.parse(Gdx.files.internal(fileLoc));
+        SaveManager s = new SaveManager(0,0,0,0,0,"");
+        JsonValue base = json.parse(s.output);
         JsonValue ships = base.get("ships");
         JsonValue colleges = base.get("colleges");
         JsonValue quests = base.get("quests");
