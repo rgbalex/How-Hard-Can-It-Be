@@ -30,13 +30,13 @@ public class QuestManager {
         chest = new Chest();
 
         createRandomQuests();
-        allQuests.add(new KillDuckQuest()); // after finishing all quests, the player is tasked with killing longboi
+        allQuests.add(1, new KillDuckQuest()); // after finishing all quests, the player is tasked with killing longboi
     }
 
     public static void reset(){
         allQuests.clear();
         createRandomQuests();
-        allQuests.add(new KillDuckQuest()); // killing a duck is the "boss quest" achieved after all others
+        allQuests.add(1, new KillDuckQuest()); // killing a duck is the "boss quest" achieved after all others
     }
 
     /**
